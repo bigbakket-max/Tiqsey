@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { X, Search, Globe, Coins } from 'lucide-react';
 import { useSettings, CURRENCIES } from '../contexts/SettingsContext';
 import { motion, AnimatePresence } from 'motion/react';
+import { getCurrencyFlag } from '../utils/currencyFlags';
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -67,22 +68,29 @@ const getCurrencyLabel = (curr: typeof CURRENCIES[0], isSelected: boolean) => {
   };
   
   const sym = symbols[code];
+  const flag = getCurrencyFlag(code);
   
   if (isSelected) {
     return (
-      <span className="text-[13px] font-semibold text-blue-600 dark:text-blue-400 truncate block">
-        <strong className="font-extrabold mr-1">{code}</strong>
-        <span>- {name}</span>
-        {sym && <span> ({sym})</span>}
+      <span className="text-[13px] font-semibold text-blue-600 dark:text-blue-400 flex items-center gap-2 truncate">
+        <span className="text-base select-none shrink-0" role="img" aria-label={`${code} flag`}>{flag}</span>
+        <span className="truncate">
+          <strong className="font-extrabold mr-1">{code}</strong>
+          <span>- {name}</span>
+          {sym && <span> ({sym})</span>}
+        </span>
       </span>
     );
   }
 
   return (
-    <span className="text-[13px] font-[500] text-slate-700 dark:text-slate-300 truncate block group-hover:text-slate-900 dark:group-hover:text-white">
-      <strong className="font-extrabold text-[#1a2b49] dark:text-slate-100 mr-1">{code}</strong>
-      <span className="text-slate-600 dark:text-slate-400 font-medium">- {name}</span>
-      {sym && <span className="text-slate-400 dark:text-slate-500 font-normal"> ({sym})</span>}
+    <span className="text-[13px] font-[500] text-slate-700 dark:text-slate-300 flex items-center gap-2 truncate group-hover:text-slate-900 dark:group-hover:text-white">
+      <span className="text-base select-none shrink-0" role="img" aria-label={`${code} flag`}>{flag}</span>
+      <span className="truncate">
+        <strong className="font-extrabold text-[#1a2b49] dark:text-slate-100 mr-1">{code}</strong>
+        <span className="text-slate-600 dark:text-slate-400 font-medium">- {name}</span>
+        {sym && <span className="text-slate-400 dark:text-slate-500 font-normal"> ({sym})</span>}
+      </span>
     </span>
   );
 };
@@ -174,7 +182,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 15 }}
               transition={{ type: 'spring', damping: 25, stiffness: 350 }}
-              className="w-full max-w-[800px] h-[640px] max-h-[90vh] bg-white dark:bg-slate-900 rounded-3xl shadow-2xl overflow-hidden flex flex-col font-sans border border-slate-100 dark:border-slate-800 transition-colors duration-300"
+              className="w-full max-w-[800px] h-[640px] max-h-[90vh] bg-white dark:bg-slate-900 rounded-xl shadow-2xl overflow-hidden flex flex-col font-sans border border-slate-100 dark:border-slate-800 transition-colors duration-300"
               id="settings-modal-container"
               role="dialog"
               aria-modal="true"
@@ -245,7 +253,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       placeholder='Search currencies...'
-                      className="w-full pl-11 pr-10 py-2.5 rounded-2xl border border-slate-200/80 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/40 text-[13.5px] font-medium text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 hover:bg-slate-50 dark:hover:bg-slate-950/70 focus:bg-white dark:focus:bg-slate-950 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-500/10 dark:focus:ring-blue-500/5 transition-all duration-200"
+                      className="w-full pl-11 pr-10 py-2.5 rounded-xl border border-slate-200/80 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/40 text-[13.5px] font-medium text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 hover:bg-slate-50 dark:hover:bg-slate-950/70 focus:bg-white dark:focus:bg-slate-950 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-500/10 dark:focus:ring-blue-500/5 transition-all duration-200"
                     />
                     {isSearching && (
                       <button

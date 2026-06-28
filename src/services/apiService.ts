@@ -44,10 +44,14 @@ export const ApiService = {
             let matchesDest = false;
             if (destLower === 'europe') {
               matchesDest = locationLower.includes('spain') || locationLower.includes('france') || locationLower.includes('switzerland') || locationLower.includes('italy') || locationLower.includes('germany') || locationLower.includes('netherlands');
-            } else if (destLower === 'usa') {
-              matchesDest = cityLower === 'usa' || locationLower.includes('usa') || locationLower.includes('united states');
-            } else if (destLower === 'uae') {
-              matchesDest = cityLower === 'dubai' || locationLower.includes('dubai') || locationLower.includes('uae') || locationLower.includes('emirates');
+            } else if (destLower === 'usa' || destLower === 'north america' || destLower === 'united states') {
+              matchesDest = cityLower === 'usa' || locationLower.includes('usa') || locationLower.includes('united states') || cityLower === 'new york' || locationLower.includes('new york');
+            } else if (destLower === 'uae' || destLower === 'middle east') {
+              matchesDest = cityLower === 'dubai' || locationLower.includes('dubai') || locationLower.includes('uae') || locationLower.includes('emirates') || cityLower === 'istanbul' || locationLower.includes('istanbul') || locationLower.includes('turkey');
+            } else if (destLower === 'asia') {
+              matchesDest = cityLower === 'tokyo' || cityLower === 'osaka' || cityLower === 'singapore' || cityLower === 'bangkok' || locationLower.includes('japan') || locationLower.includes('singapore') || locationLower.includes('thailand');
+            } else if (destLower === 'oceania' || destLower === 'australia') {
+              matchesDest = cityLower === 'sydney' || locationLower.includes('australia');
             } else {
               const cleanDest = destLower.replace(/[^a-z0-9]/g, '');
               const cleanCity = cityLower.replace(/[^a-z0-9]/g, '');

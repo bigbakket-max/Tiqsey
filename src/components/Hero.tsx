@@ -1,9 +1,11 @@
 import React from 'react';
 import { motion } from 'motion/react';
+
 import SearchBar from './SearchBar';
 
 interface HeroProps {
   onSelectDestination: (destination: string) => void;
+  onSearch: (query: string) => void;
 }
 
 const COLLAGE_LEFT = [
@@ -336,9 +338,16 @@ const UNUSED_STICKERS = [
   }
 ];
 
-export default function Hero({ onSelectDestination }: HeroProps) {
+export default function Hero({ onSelectDestination, onSearch }: HeroProps) {
   return (
-    <div className="relative z-40 bg-gradient-to-b from-[#EBF1F5] via-[#F4F7F9] to-[#F9FBFC] dark:from-slate-950 dark:via-[#0c1424] dark:to-slate-950 pt-6 pb-6 md:pt-10 md:pb-10 flex flex-col items-center justify-center transition-colors duration-300">
+    <div 
+      className="relative z-40 p-0 h-[300px] md:h-[400px] lg:h-[440px] flex flex-col items-center justify-center transition-colors duration-300 rounded-bl-[16px] md:rounded-bl-[24px] overflow-hidden shadow-sm"
+      style={{
+        backgroundImage: "linear-gradient(to bottom, rgba(0,0,0,0.45), rgba(0,0,0,0.75)), url('https://images.unsplash.com/photo-1506929562872-bb421503ef21?auto=format&fit=crop&w=2000&q=80')",
+        backgroundSize: 'cover',
+        backgroundPosition: 'center'
+      }}
+    >
       
       {/* Premium subtle atmospheric background glows */}
       <div className="absolute top-[-20%] left-[20%] w-[400px] h-[400px] bg-blue-300/15 dark:bg-blue-900/10 rounded-full blur-[100px] pointer-events-none" />
@@ -347,29 +356,23 @@ export default function Hero({ onSelectDestination }: HeroProps) {
 
 
       {/* Three-Column Responsive Guard Grid */}
-      <div className="w-full max-w-[1400px] mx-auto px-4 md:px-8 grid grid-cols-1 lg:grid-cols-12 gap-6 items-center min-h-[240px] md:min-h-[290px] relative z-10">
+      <div className="w-full max-w-[1400px] mx-auto px-4 md:px-8 grid grid-cols-1 lg:grid-cols-12 gap-6 items-center min-h-[220px] md:min-h-[320px] lg:min-h-[380px] relative z-10">
         
         {/* Left Column: Left Collage (strictly fits Columns 1-3) */}
-        <div className="hidden lg:block lg:col-span-3 h-[280px] relative pointer-events-none">
+        <div className="hidden lg:block lg:col-span-3 h-[340px] relative pointer-events-none">
           {COLLAGE_LEFT.map((img, i) => (
             <motion.div
               key={`left-${i}`}
-              style={img.style}
+              style={{ ...img.style, willChange: 'transform' }}
               className={`absolute overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.08)] bg-white border-2 border-white dark:border-slate-800 dark:bg-slate-900 cursor-pointer pointer-events-auto transition-shadow duration-300 ${img.className}`}
               initial={{ opacity: 0, y: 15, rotate: img.rotate }}
               animate={{ 
                 opacity: 1, 
-                y: [0, img.yOffset, 0],
+                y: 0,
                 rotate: img.rotate
               }}
               transition={{
-                y: {
-                  repeat: Infinity,
-                  duration: 6,
-                  ease: "easeInOut",
-                  delay: img.delay
-                },
-                opacity: { duration: 0.6 }
+                duration: 0.6
               }}
               whileHover={{ 
                 scale: 1.12, 
@@ -398,37 +401,47 @@ export default function Hero({ onSelectDestination }: HeroProps) {
             transition={{ duration: 0.5, ease: "easeOut" }}
             className="w-full flex flex-col items-center"
           >
-            <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-[38px] xl:text-[42px] font-black text-[#1a2b49] dark:text-white mb-6 tracking-tight leading-[1.15] max-w-[650px] mx-auto">
-              Explore <span className="bg-gradient-to-r from-red-600 to-rose-500 dark:from-red-400 dark:to-rose-300 bg-clip-text text-transparent font-extrabold px-0.5">unforgettable experiences</span> <br className="hidden sm:inline" />around the world
+            <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-[38px] xl:text-[42px] font-black text-white drop-shadow-[0_4px_16px_rgba(0,0,0,0.6)] tracking-tight leading-[1.4] max-w-[700px] mx-auto mb-0">
+              <span className="inline-block align-middle">
+                Explore
+                <span className="inline-flex items-center gap-0.5 ml-1.5 mr-1 select-none">
+                  <span className="inline-block text-2xl sm:text-3xl md:text-[34px] hover:rotate-12 transition-transform duration-300" role="img" aria-label="airplane">✈️</span>
+                  <span className="inline-block text-2xl sm:text-3xl md:text-[34px] hover:translate-x-1 transition-transform duration-300" role="img" aria-label="car">🚗</span>
+                  <span className="inline-block text-2xl sm:text-3xl md:text-[34px] hover:rotate-6 transition-transform duration-300" role="img" aria-label="steam train">🚂</span>
+                  <span className="inline-block text-2xl sm:text-3xl md:text-[34px] hover:-translate-y-1 transition-transform duration-300" role="img" aria-label="train">🚆</span>
+                </span>
+              </span>{" "}
+              <span className="inline-block align-middle">
+                <span className="text-white font-extrabold">unforgettable experiences</span>
+                <span className="inline-block text-2xl sm:text-3xl md:text-[34px] ml-1.5 select-none hover:scale-110 transition-transform duration-300" role="img" aria-label="camera">📸</span>
+              </span>{" "}
+              <span className="inline-block align-middle">
+                around the <span className="text-brand">world</span>
+                <span className="inline-flex items-center gap-0.5 ml-1.5 select-none">
+                  <span className="inline-block text-2xl sm:text-3xl md:text-[34px] hover:rotate-6 transition-transform duration-300" role="img" aria-label="globe">🌍</span>
+                  <span className="inline-block text-2xl sm:text-3xl md:text-[34px] hover:scale-110 transition-transform duration-300" role="img" aria-label="beach umbrella">🏖️</span>
+                  <span className="inline-block text-2xl sm:text-3xl md:text-[34px] hover:-translate-y-1 transition-transform duration-300" role="img" aria-label="luggage">🧳</span>
+                </span>
+              </span>
             </h1>
-            
-            <div className="max-w-[580px] mx-auto w-full relative">
-              <SearchBar onSearch={onSelectDestination} placeholder="Find places and things to do" />
-            </div>
           </motion.div>
         </div>
 
         {/* Right Column: Right Collage (strictly fits Columns 10-12) */}
-        <div className="hidden lg:block lg:col-span-3 h-[280px] relative pointer-events-none">
+        <div className="hidden lg:block lg:col-span-3 h-[340px] relative pointer-events-none">
           {COLLAGE_RIGHT.map((img, i) => (
             <motion.div
               key={`right-${i}`}
-              style={img.style}
+              style={{ ...img.style, willChange: 'transform' }}
               className={`absolute overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.08)] bg-white border-2 border-white dark:border-slate-800 dark:bg-slate-900 cursor-pointer pointer-events-auto transition-shadow duration-300 ${img.className}`}
               initial={{ opacity: 0, y: 15, rotate: img.rotate }}
               animate={{ 
                 opacity: 1, 
-                y: [0, img.yOffset, 0],
+                y: 0,
                 rotate: img.rotate
               }}
               transition={{
-                y: {
-                  repeat: Infinity,
-                  duration: 6,
-                  ease: "easeInOut",
-                  delay: img.delay
-                },
-                opacity: { duration: 0.6 }
+                duration: 0.6
               }}
               whileHover={{ 
                 scale: 1.12, 

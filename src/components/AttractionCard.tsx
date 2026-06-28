@@ -121,12 +121,12 @@ export default function AttractionCard({ attr, onClick, size = 'md' }: Props) {
           
           {/* Stacked Modern Premium Price feed */}
           <div className="text-right flex flex-col items-end shrink-0 select-none">
-            <span className="text-[9px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-0.5 leading-none">
+            <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1">
               From
             </span>
             {attr.discountPrice ? (
-              <div className="flex flex-col items-end gap-0.5 opacity-90 hover:opacity-100 transition-opacity">
-                <span className="text-[10px] text-slate-400 line-through leading-none font-bold select-none">
+              <div className="flex flex-col items-end gap-0.5 select-none">
+                <span className="text-[10px] text-slate-400 dark:text-slate-500 line-through font-bold leading-none">
                   {formatPrice(attr.price)}
                 </span>
                 <span className="text-sm sm:text-base font-black text-[#FF0022] dark:text-[#FF3E4E] leading-none">
@@ -134,7 +134,7 @@ export default function AttractionCard({ attr, onClick, size = 'md' }: Props) {
                 </span>
               </div>
             ) : (
-              <span className="text-sm sm:text-base font-black text-slate-900 dark:text-slate-150 leading-none">
+              <span className="text-sm sm:text-base font-black text-slate-900 dark:text-slate-100 leading-none">
                 {formatPrice(attr.price)}
               </span>
             )}

@@ -10,6 +10,7 @@ export interface Attraction {
   discountPrice?: number;
   imageUrl: string;
   isPopular?: boolean;
+  region?: string;
   description?: string;
   highlights?: string[];
   included?: string[];

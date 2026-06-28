@@ -1,5 +1,5 @@
 import { Attraction, Destination } from "../types";
-import lindtImage from "../assets/images/lindt_chocolate_fountain_1779240843252.png";
+const lindtImage = 'lindtImage';
 
 export const POPULAR_ATTRACTIONS: Attraction[] = [
   {
@@ -1849,7 +1849,7 @@ export const POPULAR_ATTRACTIONS: Attraction[] = [
     price: 35.0,
     discountPrice: 28.0,
     imageUrl:
-      "https://img.avianexperiences.com/attractions/a42af5a9-17eb-4982-88d4-6f21876e2799",
+      "https://images.unsplash.com/photo-1534567059665-cb52ded2f1a6?auto=format&fit=crop&q=80&w=800",
     isPopular: true,
     description:
       "Explore Thailand's greatest open zoo and leisure park that offers a great variety of entertainment for everyone.",
@@ -1874,7 +1874,7 @@ export const POPULAR_ATTRACTIONS: Attraction[] = [
     price: 20.0,
     discountPrice: 15.0,
     imageUrl:
-      "https://www.agoda.com/wp-content/uploads/2024/09/aquarium-featured-1244x700.jpg",
+      "https://images.unsplash.com/photo-1549472393-5ce25eb5fbdb?auto=format&fit=crop&q=80&w=800",
     isPopular: false,
     description:
       "Discover a rich variety of marine life with a walk through the glass tunnel at Underwater World Pattaya.",
@@ -1899,7 +1899,7 @@ export const POPULAR_ATTRACTIONS: Attraction[] = [
     price: 30.0,
     discountPrice: 25.0,
     imageUrl:
-      "https://staybook.in/_next/image?url=https%3A%2F%2Fcdn-imgix.headout.com%2Fmedia%2Fimages%2F4d60ebd2a7751267b7e6f727f845783d-28789-pattaya-dolphinarium-tickets---thai-residents-04.jpg%3Fw%3D1120%26h%3D630%26crop%3Dfaces%26auto%3Dcompress%252Cformat%26fit%3Dmin&w=1080&q=75",
+      "https://images.unsplash.com/photo-1579294970420-1e592652a925?auto=format&fit=crop&q=80&w=800",
     isPopular: true,
     description:
       "Enjoy a spectacular show featuring intelligent dolphins and seals at Pattaya Dolphinarium.",
@@ -1924,7 +1924,7 @@ export const POPULAR_ATTRACTIONS: Attraction[] = [
     price: 45.0,
     discountPrice: 38.0,
     imageUrl:
-      "https://storage.googleapis.com/firstmithu/Activities/Bangkok/sealife.jpeg",
+      "https://images.unsplash.com/photo-1566127444979-b3d2b654e3d7?auto=format&fit=crop&q=80&w=800",
     isPopular: true,
     description:
       "Explore one of the largest aquariums in Southeast Asia located beneath the Siam Paragon mall.",
@@ -1949,7 +1949,7 @@ export const POPULAR_ATTRACTIONS: Attraction[] = [
     price: 32.0,
     discountPrice: 28.0,
     imageUrl:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQeae4WOLABD6_lzWhgwN2IYcWkeh0GVJ3oBiHlo1CokM-8UtloLFNNv24Q&s=10",
+      "https://images.unsplash.com/photo-1520038410233-7141be7e6f97?auto=format&fit=crop&q=80&w=800",
     isPopular: true,
     description:
       "Experience spectacular 360-degree panoramic views of Bangkok from Thailand's highest observation deck.",
@@ -1974,7 +1974,7 @@ export const POPULAR_ATTRACTIONS: Attraction[] = [
     price: 55.0,
     discountPrice: 45.0,
     imageUrl:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSn9jovHjbCiKIW_CJY_URQGh8niw_eTo7P_Uv1ksGqnPd-qv0dyFKYyZxR&s=10",
+      "https://images.unsplash.com/photo-1598463959828-0902c39d48ea?auto=format&fit=crop&q=80&w=800",
     isPopular: true,
     description:
       "Experience the ultimate Thai cultural theme park with a spectacular theatrical show and grand buffet.",
@@ -1999,7 +1999,7 @@ export const POPULAR_ATTRACTIONS: Attraction[] = [
     price: 48.0,
     discountPrice: 40.0,
     imageUrl:
-      "https://i0.wp.com/darrenbloggie.com/wp-content/uploads/2022/09/gangster-61.jpg?resize=1160%2C773&quality=89&ssl=1",
+      "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&q=80&w=800",
     isPopular: true,
     description:
       "Enjoy a splash-tastic day out at Phuket's largest water park featuring thrilling rides and a massive wave pool.",
@@ -2024,7 +2024,7 @@ export const POPULAR_ATTRACTIONS: Attraction[] = [
     price: 42.0,
     discountPrice: 35.0,
     imageUrl:
-      "https://staybook.in/_next/image?url=https%3A%2F%2Fcdn-imgix.headout.com%2Fmedia%2Fimages%2F4393d34115fee0a3458a5be18ed35ead-28811-pattaya-ramayana-water-park-tickets-02.jpg%3Fw%3D1120%26h%3D630%26crop%3Dfaces%26auto%3Dcompress%252Cformat%26fit%3Dmin&w=1080&q=75",
+      "https://images.unsplash.com/photo-1520038410233-7141be7e6f97?auto=format&fit=crop&q=80&w=800",
     isPopular: true,
     description:
       "Cool off at Thailand's biggest and best water park with dozens of premium water slides and attractions.",
@@ -2049,7 +2049,7 @@ export const POPULAR_ATTRACTIONS: Attraction[] = [
     price: 25.0,
     discountPrice: 20.0,
     imageUrl:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRctsKfa8Nz3a8LArDKmdRqFHOgV4Xf7tOgjTP3PE-sAzpStKoK2HSwObHE&s=10",
+      "https://images.unsplash.com/photo-1598463959828-0902c39d48ea?auto=format&fit=crop&q=80&w=800",
     isPopular: false,
     description:
       "Wander through beautifully landscaped gardens and enjoy Thai cultural performances at Nong Nooch.",
@@ -2074,7 +2074,7 @@ export const POPULAR_ATTRACTIONS: Attraction[] = [
     price: 22.0,
     discountPrice: 18.0,
     imageUrl:
-      "https://pattayacitytourcoltd.com/uploads/SightSeenImage/tiger-park-pattaya-3442.webp",
+      "https://images.unsplash.com/photo-1534567059665-cb52ded2f1a6?auto=format&fit=crop&q=80&w=800",
     isPopular: false,
     description:
       "Get up close and personal with tigers of all sizes in a safe and controlled environment.",
@@ -2099,7 +2099,7 @@ export const POPULAR_ATTRACTIONS: Attraction[] = [
     price: 28.0,
     discountPrice: 22.0,
     imageUrl:
-      "https://meetingsmags.com/wp-content/uploads/sites/152/2023/08/AdobeStock_486300148_Editorial_Use_Only.jpg",
+      "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&q=80&w=800",
     isPopular: true,
     description:
       "Marvel at the intricate wood carvings of the Sanctuary of Truth, a breathtaking architectural wonder.",
@@ -2123,7 +2123,7 @@ export const POPULAR_ATTRACTIONS: Attraction[] = [
     reviewsCount: 1250,
     price: 35.0,
     imageUrl:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQeytTuOzDxuSoQO-zgLJgvAqOCV7yYKjQ5-nTpsNhksHYm2qXPy5B7bnMc&s=10",
+      "https://images.unsplash.com/photo-1549472393-5ce25eb5fbdb?auto=format&fit=crop&q=80&w=800",
     isPopular: true,
     description:
       "Immerse yourself in a symphony of colours at Asia's largest bird park.",
@@ -2147,7 +2147,7 @@ export const POPULAR_ATTRACTIONS: Attraction[] = [
     reviewsCount: 8500,
     price: 30.0,
     imageUrl:
-      "https://www.singaporevisa.ae/blog/wp-content/uploads/2022/07/singapore-flyer.jpg",
+      "https://images.unsplash.com/photo-1520038410233-7141be7e6f97?auto=format&fit=crop&q=80&w=800",
     isPopular: true,
     description:
       "Enjoy panoramic views of Marina Bay and beyond from Asia's largest giant observation wheel.",
@@ -2171,7 +2171,7 @@ export const POPULAR_ATTRACTIONS: Attraction[] = [
     reviewsCount: 5400,
     price: 15.0,
     imageUrl:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQAya7EijJvjfItrQtqZ9KY8bJJlw5JSaMTr-o-A7meE1uqaMWaFfG-AN0n&s=10",
+      "https://images.unsplash.com/photo-1598463959828-0902c39d48ea?auto=format&fit=crop&q=80&w=800",
     isPopular: true,
     description:
       "End your day at Sentosa with the award-winning multi-sensory night show.",
@@ -2191,7 +2191,7 @@ export const POPULAR_ATTRACTIONS: Attraction[] = [
     reviewsCount: 11200,
     price: 25.0,
     imageUrl:
-      "https://www.marinabaysands.com/content/dam/revamp/attractions/TicketOnlineOrder/skypark-obs-deck-offpeak.jpg",
+      "https://images.unsplash.com/photo-1566127444979-b3d2b654e3d7?auto=format&fit=crop&q=80&w=800",
     isPopular: true,
     description:
       "Take in stunning views of Singapore from the iconic Marina Bay Sands Skypark.",
@@ -2215,7 +2215,7 @@ export const POPULAR_ATTRACTIONS: Attraction[] = [
     reviewsCount: 14300,
     price: 45.0,
     imageUrl:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqDGXVMyOfj84YEv9VQALKZP-zBzgOlLFKqrFrtVnOeJ9aOcGMHIooA6U&s=10",
+      "https://images.unsplash.com/photo-1534567059665-cb52ded2f1a6?auto=format&fit=crop&q=80&w=800",
     isPopular: true,
     description:
       "Experience the world's first nocturnal wildlife park and explore it via a guided tram ride.",
@@ -2239,7 +2239,7 @@ export const POPULAR_ATTRACTIONS: Attraction[] = [
     reviewsCount: 9600,
     price: 40.0,
     imageUrl:
-      "https://assets.cntraveller.in/photos/687e0eef95d499854d6c7bf0/master/w_1600%2Cc_limit/The%2520Shark%2520Tunnel%2520-%2520Image%2520by%2520Pallavi%2520Pasricha.JPG",
+      "https://images.unsplash.com/photo-1549472393-5ce25eb5fbdb?auto=format&fit=crop&q=80&w=800",
     isPopular: true,
     description:
       "Explore the fascinating marine realm of S.E.A. Aquarium, home to more than 100,000 marine animals.",
@@ -2263,7 +2263,7 @@ export const POPULAR_ATTRACTIONS: Attraction[] = [
     reviewsCount: 5200,
     price: 28.0,
     imageUrl:
-      "https://www.serviceonline.sg/Storage/Shop/1/Products/1151/1_500.png",
+      "https://images.unsplash.com/photo-1579294970420-1e592652a925?auto=format&fit=crop&q=80&w=800",
     isPopular: false,
     description:
       "Mingle with your favorite celebrities and experience the Spirit of Singapore boat ride.",
@@ -2287,7 +2287,7 @@ export const POPULAR_ATTRACTIONS: Attraction[] = [
     reviewsCount: 2100,
     price: 65.0,
     imageUrl:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRltGz-J5WLULCqHuYd0pxfXqOGFSThlr-VSy2ua4uREEtIRLzDPdWBa2w&s=10",
+      "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&q=80&w=800",
     isPopular: true,
     description:
       "Experience the magic of Thai culture with stunning parades, illuminations, and a grand buffet.",
@@ -2302,7 +2302,7 @@ export const POPULAR_ATTRACTIONS: Attraction[] = [
   },
   {
     id: "bkk-ancient-city",
-    name: "Ancient City Bangkok Tickets",
+    name: "Ancient City",
     location: "Bangkok, Thailand",
     city: "Bangkok",
     region: "Asia",
@@ -2311,7 +2311,7 @@ export const POPULAR_ATTRACTIONS: Attraction[] = [
     reviewsCount: 4300,
     price: 22.0,
     imageUrl:
-      "https://www.thailandnews.co/wp-content/uploads/Ancient-Siam-Park-Mueang-Boran-HAH.jpg",
+      "https://images.unsplash.com/photo-1598463959828-0902c39d48ea?auto=format&fit=crop&q=80&w=800",
     isPopular: false,
     description:
       "Explore the world's largest outdoor museum featuring scaled-down replicas of Thailand's most significant historical structures.",
@@ -2335,7 +2335,7 @@ export const POPULAR_ATTRACTIONS: Attraction[] = [
     reviewsCount: 3800,
     price: 12.0,
     imageUrl:
-      "https://media1.thrillophilia.com/filestore/o0xhzt5tx5x3p7tr3crgqx0swdej_shutterstock_439625365.jpg?w=400&h=300",
+      "https://images.unsplash.com/photo-1566127444979-b3d2b654e3d7?auto=format&fit=crop&q=80&w=800",
     isPopular: false,
     description:
       "Marvel at the giant three-headed elephant statue housing a fascinating museum of antiquities.",
@@ -2359,7 +2359,7 @@ export const POPULAR_ATTRACTIONS: Attraction[] = [
     reviewsCount: 6100,
     price: 25.0,
     imageUrl:
-      "https://ik.imagekit.io/travalot/development/resources/attachments/2025/7/21/36431010-7e55-11f0-bffc-6921f123467e.png?tr=w-1260,h-800",
+      "https://images.unsplash.com/photo-1520038410233-7141be7e6f97?auto=format&fit=crop&q=80&w=800",
     isPopular: true,
     description:
       "Enjoy a fun-filled day at one of Southeast Asia's largest theme and water parks.",
@@ -2383,7 +2383,7 @@ export const POPULAR_ATTRACTIONS: Attraction[] = [
     reviewsCount: 2900,
     price: 26.0,
     imageUrl:
-      "https://ik.imagekit.io/travalot/development/resources/attachments/2025/8/12/d5968dd0-8fbd-11f0-a466-ab60b3329400.jpg?tr=w-1600,h-1067,c-at_max:f-webp:q-85",
+      "https://images.unsplash.com/photo-1549472393-5ce25eb5fbdb?auto=format&fit=crop&q=80&w=800",
     isPopular: false,
     description:
       "Discover the wonders of the ocean at the largest aquarium in Thailand.",
@@ -2407,7 +2407,7 @@ export const POPULAR_ATTRACTIONS: Attraction[] = [
     reviewsCount: 4100,
     price: 24.0,
     imageUrl:
-      "https://d1j7gws94ta18j.cloudfront.net/insecure/rs:fill:1168:656/czM6Ly90YWtlbWV0b3VyLTMtMC90cmlwcy9JamE0TS1vbVZ6Ui1tYWRhbS5qcGc",
+      "https://images.unsplash.com/photo-1579294970420-1e592652a925?auto=format&fit=crop&q=80&w=800",
     isPopular: false,
     description:
       "Get up close and take selfies with lifelike wax figures of global icons and celebrities.",
@@ -2431,7 +2431,7 @@ export const POPULAR_ATTRACTIONS: Attraction[] = [
     reviewsCount: 3200,
     price: 20.0,
     imageUrl:
-      "https://phukettravelshop.com/wp-content/uploads/2022/11/PHUKET-DOLPHIN-SHOW-15.jpg",
+      "https://images.unsplash.com/photo-1534567059665-cb52ded2f1a6?auto=format&fit=crop&q=80&w=800",
     isPopular: false,
     description:
       "Be entertained by the incredible intelligence and agility of dolphins at this family-friendly show.",
@@ -2455,7 +2455,7 @@ export const POPULAR_ATTRACTIONS: Attraction[] = [
     reviewsCount: 5800,
     price: 18.0,
     imageUrl:
-      "https://changpuakmagazine.com/images/article/11421906pat_co_march23.jpg",
+      "https://images.unsplash.com/photo-1598463959828-0902c39d48ea?auto=format&fit=crop&q=80&w=800",
     isPopular: true,
     description:
       "Experience Thailand's largest and most spectacular cabaret show featuring dazzling costumes and sets.",
@@ -2472,25 +2472,81 @@ export const POPULAR_ATTRACTIONS: Attraction[] = [
 
 export const DESTINATIONS: Destination[] = [
   {
-    id: "france",
-    name: "France",
+    id: "tokyo",
+    name: "Tokyo, Japan",
+    attractionsCount: 321,
+    imageUrl:
+      "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&q=80&w=800",
+  },
+  {
+    id: "osaka",
+    name: "Osaka, Japan",
+    attractionsCount: 148,
+    imageUrl:
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Osaka_Castle_03bs3200.jpg/1280px-Osaka_Castle_03bs3200.jpg",
+  },
+  {
+    id: "paris",
+    name: "Paris, France",
     attractionsCount: 457,
     imageUrl:
       "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
   },
   {
-    id: "spain",
-    name: "Spain",
+    id: "rome",
+    name: "Rome, Italy",
+    attractionsCount: 283,
+    imageUrl:
+      "https://images.unsplash.com/photo-1552832230-c0197dd311b5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+  },
+  {
+    id: "istanbul",
+    name: "Istanbul, Turkey",
+    attractionsCount: 194,
+    imageUrl:
+      "https://losadventuros.com/wp-content/uploads/2023/03/14-16-places-to-see-in-istanbul-2-1024x682.jpg",
+  },
+  {
+    id: "nyc",
+    name: "New York City, USA",
+    attractionsCount: 512,
+    imageUrl:
+      "https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+  },
+  {
+    id: "london",
+    name: "London, UK",
+    attractionsCount: 390,
+    imageUrl:
+      "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&q=80&w=1200",
+  },
+  {
+    id: "barcelona",
+    name: "Barcelona, Spain",
     attractionsCount: 216,
     imageUrl:
       "https://images.unsplash.com/photo-1511527661048-7fe73d85e9a4?auto=format&fit=crop&q=80&w=1200",
   },
   {
-    id: "italy",
-    name: "Italy",
-    attractionsCount: 283,
+    id: "amsterdam",
+    name: "Amsterdam, Netherlands",
+    attractionsCount: 175,
     imageUrl:
-      "https://images.unsplash.com/photo-1552832230-c0197dd311b5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+      "https://i.natgeofe.com/n/e2f26e6b-8255-4391-84be-4b0919d4c0d8/20240626-0349-Jonathan%20Irish-NGCW-CITI-AA-Amsterdam-_7R52855.jpg",
+  },
+  {
+    id: "lisbon",
+    name: "Lisbon, Portugal",
+    attractionsCount: 124,
+    imageUrl:
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Lisboa_-_Portugal_%2852597836992%29.jpg/330px-Lisboa_-_Portugal_%2852597836992%29.jpg",
+  },
+  {
+    id: "dubai",
+    name: "Dubai, UAE",
+    attractionsCount: 156,
+    imageUrl:
+      "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&q=80&w=1200",
   },
   {
     id: "singapore",
@@ -2500,45 +2556,24 @@ export const DESTINATIONS: Destination[] = [
       "https://images.unsplash.com/photo-1525596662741-e94ff9f26de1?auto=format&fit=crop&q=80&w=1200",
   },
   {
-    id: "thailand",
-    name: "Thailand",
-    attractionsCount: 234,
-    imageUrl:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJLvfUvBH88YN001vl-J9iZPKa4dhU-LtLKhap6akRBC9jPwdBOEvC1Ur-&s=10",
-  },
-  {
-    id: "australia",
-    name: "Australia",
+    id: "sydney",
+    name: "Sydney, Australia",
     attractionsCount: 142,
     imageUrl:
       "https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?auto=format&fit=crop&q=80&w=1200",
   },
   {
-    id: "usa",
-    name: "United States",
-    attractionsCount: 512,
+    id: "bangkok",
+    name: "Bangkok, Thailand",
+    attractionsCount: 234,
     imageUrl:
-      "https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1505003005845-8167f9dbe4e4?auto=format&fit=crop&q=80&w=1200",
   },
   {
-    id: "japan",
-    name: "Japan",
-    attractionsCount: 469,
+    id: "zurich",
+    name: "Zurich, Switzerland",
+    attractionsCount: 86,
     imageUrl:
-      "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&q=80&w=800",
-  },
-  {
-    id: "london",
-    name: "London",
-    attractionsCount: 390,
-    imageUrl:
-      "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&q=80&w=1200",
-  },
-  {
-    id: "dubai",
-    name: "Dubai",
-    attractionsCount: 156,
-    imageUrl:
-      "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&q=80&w=1200",
+      "https://images.unsplash.com/photo-1515488764276-beab7607c1e6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
   },
 ];

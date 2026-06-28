@@ -25,7 +25,9 @@ export default function PopularAttractions({ onViewAttraction }: { onViewAttract
       try {
         const data = await ApiService.getPopularAttractions();
         if (isMounted) {
-          setAttractions(data.slice(0, MAX_TOTAL_ATTRACTIONS));
+          // Filter out hot deals (attractions that have discountPrice < price)
+          const nonDealData = data.filter(attr => !attr.discountPrice || attr.discountPrice >= attr.price);
+          setAttractions(nonDealData.slice(0, MAX_TOTAL_ATTRACTIONS));
         }
       } catch (err) {
         if (isMounted) {
@@ -70,9 +72,26 @@ export default function PopularAttractions({ onViewAttraction }: { onViewAttract
         </div>
 
         {isLoading ? (
-          <div className="flex flex-col items-center justify-center py-20 gap-4">
-            <Loader2 className="w-10 h-10 text-brand animate-spin" />
-            <p className="text-gray-500 dark:text-slate-400 font-medium">Loading top destinations...</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-5">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <div key={i} className="bg-white dark:bg-slate-950 rounded-2xl overflow-hidden shadow-sm border border-slate-100/80 dark:border-slate-850 h-full animate-pulse flex flex-col">
+                <div className="aspect-[1.5/1] bg-gray-200 dark:bg-slate-800 w-full relative">
+                  <div className="absolute top-3 right-3 w-8.5 h-8.5 rounded-full bg-gray-300 dark:bg-slate-700"></div>
+                </div>
+                <div className="flex-1 flex flex-col p-5">
+                  <div className="h-2.5 w-1/2 bg-gray-200 dark:bg-slate-800 rounded mb-3"></div>
+                  <div className="h-4 w-3/4 bg-gray-300 dark:bg-slate-700 rounded mb-2"></div>
+                  <div className="h-4 w-1/2 bg-gray-300 dark:bg-slate-700 rounded mb-4 min-h-[2.5rem]"></div>
+                  <div className="mt-auto flex items-end justify-between w-full pt-4 border-t border-slate-100 dark:border-slate-800/60">
+                    <div className="h-7 w-16 rounded-full bg-gray-200 dark:bg-slate-800"></div>
+                    <div className="flex flex-col items-end gap-1">
+                      <div className="h-2 w-8 bg-gray-200 dark:bg-slate-800 rounded"></div>
+                      <div className="h-4 w-12 bg-gray-300 dark:bg-slate-700 rounded"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         ) : (
           <>

@@ -50,9 +50,6 @@ export default function RecentlyViewed({ items, onSelect, onClear }: RecentlyVie
       <div className="max-w-7xl mx-auto px-4 md:px-6">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-5">
           <div className="flex items-center gap-5">
-            <div className="w-14 h-14 rounded-3xl bg-white flex items-center justify-center text-brand shadow-xl shadow-brand/5 border border-brand/5">
-              <Clock className="w-7 h-7" />
-            </div>
             <div>
               <h2 className="text-2xl md:text-3xl font-black text-gray-900 tracking-tighter leading-[1.1] mb-1">Recently viewed</h2>
               <div className="flex items-center gap-3">
@@ -64,37 +61,41 @@ export default function RecentlyViewed({ items, onSelect, onClear }: RecentlyVie
           </div>
           
           <div className="flex items-center gap-4">
-            <div className="hidden sm:flex items-center gap-2">
-              <button 
-                onClick={scrollLeft}
-                disabled={!showLeftScroll}
-                className={`p-3.5 rounded-2xl border transition-all ${
-                  !showLeftScroll ? 'border-gray-100 text-gray-200 cursor-not-allowed' : 'border-gray-200 text-gray-900 hover:border-brand hover:text-brand hover:bg-brand/5 active:scale-95 shadow-sm'
-                }`}
-              >
-                <ChevronLeft className="w-5 h-5" />
-              </button>
-              <button 
-                onClick={scrollRight}
-                disabled={!showRightScroll}
-                className={`p-3.5 rounded-2xl border transition-all ${
-                  !showRightScroll ? 'border-gray-100 text-gray-200 cursor-not-allowed' : 'border-gray-200 text-gray-900 hover:border-brand hover:text-brand hover:bg-brand/5 active:scale-95 shadow-sm'
-                }`}
-              >
-                <ChevronRight className="w-5 h-5" />
-              </button>
-            </div>
             <button 
               onClick={onClear}
-              className="group flex items-center gap-2 px-6 h-12 rounded-2xl bg-white border border-gray-200 text-[10px] font-black uppercase tracking-widest text-gray-500 hover:text-red-500 hover:border-red-200 hover:bg-red-50 transition-all duration-300 shadow-sm"
+              className="group relative flex items-center gap-2 px-4 py-2 rounded-full bg-white hover:bg-rose-50/60 dark:bg-slate-900 dark:hover:bg-rose-950/20 border border-slate-200 dark:border-slate-800 hover:border-rose-200 dark:hover:border-rose-900/40 text-[11px] font-bold tracking-wider text-slate-500 hover:text-rose-600 dark:text-slate-400 dark:hover:text-rose-400 transition-all duration-300 shadow-sm hover:shadow-rose-100 dark:hover:shadow-none hover:-translate-y-0.5 active:translate-y-0"
             >
-              <Trash2 className="w-3.5 h-3.5 group-hover:scale-110 transition-transform" />
-              Clear
+              <Trash2 className="w-3.5 h-3.5 text-slate-400 group-hover:text-rose-500 dark:text-slate-500 dark:group-hover:text-rose-400 transition-all duration-300 group-hover:rotate-6 group-hover:scale-110" strokeWidth={2.2} />
+              <span className="uppercase text-[9px] font-black tracking-widest leading-none">Clear history</span>
             </button>
           </div>
         </div>
 
         <div className="relative group/slider">
+          {/* Left Floating Arrow */}
+          <button 
+            onClick={scrollLeft}
+            disabled={!showLeftScroll}
+            className={`absolute left-2 md:-left-5 top-[40%] -translate-y-1/2 z-40 w-12 h-12 rounded-full bg-white dark:bg-slate-900 border border-slate-150 dark:border-slate-800 flex items-center justify-center text-slate-800 dark:text-slate-100 shadow-[0_8px_30px_rgba(0,0,0,0.12)] active:scale-95 transition-all duration-300 select-none ${
+              !showLeftScroll ? 'opacity-0 pointer-events-none scale-90' : 'opacity-100 hover:scale-105'
+            }`}
+            aria-label="Previous"
+          >
+            <ChevronLeft className="w-6 h-6 text-slate-700 dark:text-slate-300" strokeWidth={2.5} />
+          </button>
+
+          {/* Right Floating Arrow */}
+          <button 
+            onClick={scrollRight}
+            disabled={!showRightScroll}
+            className={`absolute right-2 md:-right-5 top-[40%] -translate-y-1/2 z-40 w-12 h-12 rounded-full bg-white dark:bg-slate-900 border border-slate-150 dark:border-slate-800 flex items-center justify-center text-slate-800 dark:text-slate-100 shadow-[0_8px_30px_rgba(0,0,0,0.12)] active:scale-95 transition-all duration-300 select-none ${
+              !showRightScroll ? 'opacity-0 pointer-events-none scale-90' : 'opacity-100 hover:scale-105'
+            }`}
+            aria-label="Next"
+          >
+            <ChevronRight className="w-6 h-6 text-slate-700 dark:text-slate-300" strokeWidth={2.5} />
+          </button>
+
           <div 
             ref={scrollRef}
             onScroll={checkScroll}
@@ -105,7 +106,7 @@ export default function RecentlyViewed({ items, onSelect, onClear }: RecentlyVie
               <div
                 key={item.id}
                 onClick={() => onSelect(item.id)}
-                className="group cursor-pointer shrink-0 snap-start w-[180px] md:w-[210px] bg-white dark:bg-slate-950 rounded-2xl overflow-hidden border border-slate-100 dark:border-slate-850/80 shadow-[0_8px_30px_-10px_rgba(0,0,0,0.04)] hover:shadow-[0_16px_36px_-8px_rgba(0,0,0,0.08)] hover:-translate-y-1 transition-all duration-500 flex flex-col h-full"
+                className="group cursor-pointer shrink-0 snap-start w-[280px] sm:w-[calc(50%-12px)] lg:w-[calc(25%-18px)] bg-white dark:bg-slate-950 rounded-2xl overflow-hidden border border-slate-100 dark:border-slate-850/80 shadow-[0_8px_30px_-10px_rgba(0,0,0,0.04)] hover:shadow-[0_16px_36px_-8px_rgba(0,0,0,0.08)] hover:-translate-y-1 transition-all duration-500 flex flex-col h-full"
               >
                 <div className="relative aspect-[1.4/1] overflow-hidden">
                   <div className="absolute inset-0 bg-slate-100 dark:bg-slate-900 animate-pulse" />

@@ -7,15 +7,11 @@ import { useSettings } from '../contexts/SettingsContext';
 function StarTravelerCharacter() {
   return (
     <motion.div 
-      className="relative w-14 h-14 flex items-center justify-center shrink-0 select-none"
-      animate={{ 
-        y: [0, -3.5, 0],
-        rotate: [-1.5, 1.5, -1.5]
-      }}
-      transition={{ 
-        duration: 3.5, 
-        repeat: Infinity, 
-        ease: "easeInOut" 
+      className="relative w-14 h-14 flex items-center justify-center shrink-0 select-none cursor-pointer"
+      whileHover={{ 
+        y: -3.5,
+        rotate: 1.5,
+        transition: { duration: 0.3 }
       }}
     >
       <div className="absolute inset-0 bg-emerald-500/20 blur-md rounded-full" />
@@ -92,24 +88,8 @@ function StarTravelerCharacter() {
           <circle cx="45" cy="38" r="4" fill="white" stroke="#047857" strokeWidth="0.8" />
           <circle cx="57" cy="38" r="4" fill="white" stroke="#047857" strokeWidth="0.8" />
           
-          <motion.circle 
-            cx="46.5" 
-            cy="38" 
-            r="2" 
-            fill="#111827" 
-            animate={{ scaleY: [1, 1, 0.1, 1, 1, 1] }} 
-            transition={{ duration: 4.2, repeat: Infinity }}
-            style={{ originY: '38px' }}
-          />
-          <motion.circle 
-            cx="58.5" 
-            cy="38" 
-            r="2" 
-            fill="#111827" 
-            animate={{ scaleY: [1, 1, 0.1, 1, 1, 1] }} 
-            transition={{ duration: 4.2, repeat: Infinity }}
-            style={{ originY: '38px' }}
-          />
+          <circle cx="46.5" cy="38" r="2" fill="#111827" />
+          <circle cx="58.5" cy="38" r="2" fill="#111827" />
 
           <circle cx="39" cy="42" r="2.5" fill="#ff8a8a" opacity="0.6" />
           <circle cx="61" cy="42" r="2.5" fill="#ff8a8a" opacity="0.6" />
@@ -125,15 +105,10 @@ function StarTravelerCharacter() {
 function SightseeingOwlCharacter() {
   return (
     <motion.div 
-      className="relative w-14 h-14 flex items-center justify-center shrink-0 select-none"
-      animate={{ 
-        y: [0, -3.5, 0],
-      }}
-      transition={{ 
-        duration: 3, 
-        repeat: Infinity, 
-        ease: "easeInOut",
-        delay: 0.2
+      className="relative w-14 h-14 flex items-center justify-center shrink-0 select-none cursor-pointer"
+      whileHover={{ 
+        y: -3.5,
+        transition: { duration: 0.3 }
       }}
     >
       <div className="absolute inset-0 bg-red-500/20 blur-md rounded-full" />
@@ -156,28 +131,8 @@ function SightseeingOwlCharacter() {
 
         {/* 1. Legs - running pose grey lines */}
         <g stroke="#4b5563" strokeWidth="4.5" strokeLinecap="round" fill="none">
-          <motion.path 
-            d="M 42,62 L 32,78 L 24,76" 
-            animate={{ 
-              d: [
-                "M 42,62 L 32,78 L 24,76",
-                "M 42,62 L 38,72 L 32,80",
-                "M 42,62 L 32,78 L 24,76"
-              ] 
-            }}
-            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-          />
-          <motion.path 
-            d="M 58,62 L 64,80 L 74,81" 
-            animate={{ 
-              d: [
-                "M 58,62 L 64,80 L 74,81",
-                "M 58,62 L 54,75 L 60,82",
-                "M 58,62 L 64,80 L 74,81"
-              ] 
-            }}
-            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-          />
+          <path d="M 42,62 L 32,78 L 24,76" />
+          <path d="M 58,62 L 64,80 L 74,81" />
         </g>
 
         {/* 2. Red Body Sphere */}
@@ -226,8 +181,6 @@ function SightseeingOwlCharacter() {
             stroke="#4b5563" 
             strokeWidth="4.5" 
             strokeLinecap="round"
-            animate={{ rotate: [0, -5, 5, 0] }}
-            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
             style={{ originX: '69px', originY: '46px' }}
           />
 
@@ -255,15 +208,10 @@ function SightseeingOwlCharacter() {
 function VaultBuddyCharacter() {
   return (
     <motion.div 
-      className="relative w-14 h-14 flex items-center justify-center shrink-0 select-none"
-      animate={{ 
-        y: [0, -3, 0],
-      }}
-      transition={{ 
-        duration: 3.2, 
-        repeat: Infinity, 
-        ease: "easeInOut",
-        delay: 0.4
+      className="relative w-14 h-14 flex items-center justify-center shrink-0 select-none cursor-pointer"
+      whileHover={{ 
+        y: -3,
+        transition: { duration: 0.3 }
       }}
     >
       <div className="absolute inset-0 bg-amber-500/20 blur-md rounded-full" />
@@ -328,8 +276,6 @@ function VaultBuddyCharacter() {
           stroke="#4b5563" 
           strokeWidth="4.5" 
           strokeLinecap="round"
-          animate={{ rotate: [0, -12, 12, 0] }}
-          transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
           style={{ originX: '72px', originY: '40px' }}
         />
 
@@ -345,24 +291,8 @@ function VaultBuddyCharacter() {
           <circle cx="46" cy="40" r="4" fill="white" stroke="#7c2d12" strokeWidth="0.8" />
           <circle cx="58" cy="40" r="4" fill="white" stroke="#7c2d12" strokeWidth="0.8" />
           
-          <motion.circle 
-            cx="44.5" 
-            cy="38.5" 
-            r="2" 
-            fill="#111827" 
-            animate={{ scaleY: [1, 1, 0.1, 1, 1, 1] }} 
-            transition={{ duration: 3.8, repeat: Infinity }}
-            style={{ originY: '38.5px' }}
-          />
-          <motion.circle 
-            cx="56.5" 
-            cy="38.5" 
-            r="2" 
-            fill="#111827" 
-            animate={{ scaleY: [1, 1, 0.1, 1, 1, 1] }} 
-            transition={{ duration: 3.8, repeat: Infinity }}
-            style={{ originY: '38.5px' }}
-          />
+          <circle cx="44.5" cy="38.5" r="2" fill="#111827" />
+          <circle cx="56.5" cy="38.5" r="2" fill="#111827" />
 
           <circle cx="39" cy="44" r="2" fill="#f97316" opacity="0.5" />
           <circle cx="63" cy="44" r="2" fill="#f97316" opacity="0.5" />
@@ -395,15 +325,28 @@ export default function TrustBar() {
     },
   ];
 
+  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
   const handleScroll = () => {
-    if (!scrollContainerRef.current) return;
-    const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
-    if (scrollWidth <= clientWidth) return;
+    if (scrollTimeoutRef.current) return;
     
-    const maxScroll = scrollWidth - clientWidth;
-    const pct = scrollLeft / maxScroll;
-    const index = Math.round(pct * (trustItems.length - 1));
-    setActiveIndex(index);
+    scrollTimeoutRef.current = setTimeout(() => {
+      if (!scrollContainerRef.current) {
+        scrollTimeoutRef.current = null;
+        return;
+      }
+      const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
+      if (scrollWidth <= clientWidth) {
+        scrollTimeoutRef.current = null;
+        return;
+      }
+      
+      const maxScroll = scrollWidth - clientWidth;
+      const pct = scrollLeft / maxScroll;
+      const index = Math.round(pct * (trustItems.length - 1));
+      setActiveIndex(index);
+      scrollTimeoutRef.current = null;
+    }, 100);
   };
 
   const scrollToItem = (index: number) => {
@@ -421,46 +364,53 @@ export default function TrustBar() {
   };
 
   return (
-    <section className="relative w-full bg-slate-50/70 dark:bg-slate-900/15 border-t border-slate-200/50 dark:border-slate-850/60 py-16 md:py-20" id="trust-bar-section">
+    <section className="relative w-full bg-white dark:bg-slate-950/20 py-12 md:py-16" id="trust-bar-section">
       <div className="max-w-7xl mx-auto px-6 md:px-12">
-        <div className="flex flex-col items-center gap-10 md:gap-12">
+        <div className="flex flex-col items-start gap-8 w-full">
           
-          {/* Centered Title */}
-          <div className="text-center max-w-2xl">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#1A2B48] dark:text-white tracking-tight leading-tight">
+          {/* Left-Aligned Title */}
+          <div className="text-left w-full">
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
               <span>{t('whyBook')} <span className="text-brand">Tiqsey</span>?</span>
             </h2>
-            <p className="text-sm sm:text-base text-slate-500 dark:text-slate-400 font-medium mt-3">
-              Trusted experience, secure booking, and ultimate peace of mind. We make finding and enjoying top global attractions completely hassle-free.
-            </p>
           </div>
 
-          {/* Trust Items Columns (Slideable horizontally on mobile, grid on desktop) */}
+          {/* Trust Items Columns (Slideable horizontally on mobile, Grid on desktop) */}
           <div 
             ref={scrollContainerRef}
             onScroll={handleScroll}
             className="w-full flex md:grid md:grid-cols-3 gap-6 md:gap-8 overflow-x-auto md:overflow-x-visible pb-4 md:pb-0 snap-x snap-mandatory no-scrollbar scroll-smooth"
           >
             {trustItems.map((item, index) => {
-              if ('isTrustpilot' in item && item.isTrustpilot) {
-                return (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 15 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: index * 0.1, duration: 0.4 }}
-                    className="flex items-start gap-4.5 p-5 md:p-6 bg-white dark:bg-slate-900/80 border border-slate-200/40 dark:border-slate-800/80 rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.015)] dark:shadow-[0_4px_25px_rgba(0,0,0,0.15)] hover:shadow-lg dark:hover:shadow-black/30 hover:border-brand/20 dark:hover:border-brand/35 -translate-y-0.5 hover:-translate-y-1.5 transition-all duration-300 w-[82vw] sm:w-[320px] md:w-auto shrink-0 snap-center"
-                  >
-                    <StarTravelerCharacter />
-                    <div className="min-w-0">
-                      <h3 className="text-base font-bold text-slate-900 dark:text-white tracking-tight leading-snug">
-                        {item.title}
-                      </h3>
-                      {/* Trustpilot Star Badge */}
-                      <div className="flex items-center gap-1.5 mt-1.5">
+              const characterElement = index === 0 ? (
+                <StarTravelerCharacter />
+              ) : index === 1 ? (
+                <SightseeingOwlCharacter />
+              ) : (
+                <VaultBuddyCharacter />
+              );
+
+              return (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 15 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1, duration: 0.4 }}
+                  className="flex flex-col items-start gap-5 p-6 md:p-8 bg-[#f1f5fb] dark:bg-slate-900/60 rounded-3xl w-[85vw] sm:w-[320px] md:w-auto shrink-0 snap-center hover:-translate-y-1 transition-all duration-300"
+                >
+                  <div className="flex items-start justify-start w-full pointer-events-none">
+                    {characterElement}
+                  </div>
+                  <div className="flex flex-col gap-1.5 mt-2 text-left">
+                    <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white tracking-tight leading-snug">
+                      {item.title}
+                    </h3>
+
+                    {item.isTrustpilot && (
+                      <div className="flex items-center gap-1.5 mt-1 mb-0.5">
                         <div className="flex gap-0.5">
-                           {[1, 2, 3, 4, 5].map((s) => (
+                          {[1, 2, 3, 4, 5].map((s) => (
                             <div key={s} className="w-3.5 h-3.5 bg-[#00b67a] flex items-center justify-center rounded-[2px] shadow-sm">
                               <svg className="w-2.5 h-2.5 text-white fill-current" viewBox="0 0 24 24">
                                 <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
@@ -470,33 +420,9 @@ export default function TrustBar() {
                         </div>
                         <span className="text-xs font-black text-slate-900 dark:text-white leading-none">4.8</span>
                       </div>
-                      <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium mt-2 leading-relaxed">
-                        {item.subtitle}
-                      </p>
-                    </div>
-                  </motion.div>
-                );
-              }
+                    )}
 
-              return (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 15 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1, duration: 0.4 }}
-                  className="flex items-start gap-4.5 p-5 md:p-6 bg-white dark:bg-slate-900/80 border border-slate-200/40 dark:border-slate-800/80 rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.015)] dark:shadow-[0_4px_25px_rgba(0,0,0,0.15)] hover:shadow-lg dark:hover:shadow-black/30 hover:border-brand/20 dark:hover:border-brand/35 -translate-y-0.5 hover:-translate-y-1.5 transition-all duration-300 w-[82vw] sm:w-[320px] md:w-auto shrink-0 snap-center"
-                >
-                  {index === 1 ? (
-                    <SightseeingOwlCharacter />
-                  ) : (
-                    <VaultBuddyCharacter />
-                  )}
-                  <div className="min-w-0">
-                    <h3 className="text-base font-bold text-slate-900 dark:text-white tracking-tight leading-snug">
-                      {item.title}
-                    </h3>
-                    <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium mt-2 leading-relaxed">
+                    <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium leading-relaxed mt-0.5">
                       {item.subtitle}
                     </p>
                   </div>
@@ -506,7 +432,7 @@ export default function TrustBar() {
           </div>
 
           {/* Interactive Page Dot Indicators (Mobile Only) */}
-          <div className="flex md:hidden items-center justify-center -gap-1 mt-1">
+          <div className="flex md:hidden items-center justify-center -gap-1 mt-1 w-full">
             {trustItems.map((_, idx) => (
               <button
                 key={idx}

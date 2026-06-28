@@ -48,6 +48,61 @@ export const CURRENCY_FLAGS: Record<string, string> = {
   ZAR: '🇿🇦',
 };
 
+export const CURRENCY_COUNTRY_MAP: Record<string, string> = {
+  EUR: 'eu',
+  USD: 'us',
+  GBP: 'gb',
+  AUD: 'au',
+  CAD: 'ca',
+  CHF: 'ch',
+  DKK: 'dk',
+  NOK: 'no',
+  PLN: 'pl',
+  SEK: 'se',
+  AED: 'ae',
+  HUF: 'hu',
+  SGD: 'sg',
+  HKD: 'hk',
+  JPY: 'jp',
+  COP: 'co',
+  NZD: 'nz',
+  MYR: 'my',
+  CZK: 'cz',
+  MXN: 'mx',
+  INR: 'in',
+  THB: 'th',
+  BRL: 'br',
+  AZN: 'az',
+  BHD: 'bh',
+  BYN: 'by',
+  CLP: 'cl',
+  CNY: 'cn',
+  IDR: 'id',
+  ILS: 'il',
+  JOD: 'jo',
+  KRW: 'kr',
+  KWD: 'kw',
+  KZT: 'kz',
+  LAK: 'la',
+  MNT: 'mn',
+  MOP: 'mo',
+  OMR: 'om',
+  PHP: 'ph',
+  PKR: 'pk',
+  QAR: 'qa',
+  RUB: 'ru',
+  SAR: 'sa',
+  TRY: 'tr',
+  TWD: 'tw',
+  VND: 'vn',
+  ZAR: 'za',
+};
+
 export function getCurrencyFlag(code: string): string {
   return CURRENCY_FLAGS[code.toUpperCase()] || '🏳️';
 }
+
+export function getCurrencyCountryCode(code: string): string {
+  return CURRENCY_COUNTRY_MAP[code.toUpperCase()] || 'us';
+}
+

@@ -1,142 +1,382 @@
-import React, { useState, useEffect } from 'react';
-import { Globe, User, Menu, X, ChevronDown, Sun, Moon, Smartphone, Home, Flame, Ticket, Map, LogOut, Search, FerrisWheel, Heart } from 'lucide-react';
-import { motion, AnimatePresence } from 'motion/react';
-import { useSettings } from '../contexts/SettingsContext';
-import { useAuth } from '../contexts/AuthContext';
-import { useWishlist } from '../contexts/WishlistContext';
-import SettingsModal from './SettingsModal';
-import SearchBar from './SearchBar';
-import { POPULAR_ATTRACTIONS } from '../data/mockData';
-import { getCurrencyFlag } from '../utils/currencyFlags';
+import React, { useState, useEffect } from "react";
+import {
+  Globe,
+  User,
+  Menu,
+  X,
+  ChevronDown,
+  Sun,
+  Moon,
+  Smartphone,
+  Home,
+  Flame,
+  Ticket,
+  Map,
+  LogOut,
+  Search,
+  FerrisWheel,
+  Heart,
+  Compass,
+  MapPin,
+  Landmark,
+  Gift,
+} from "lucide-react";
+import { motion, AnimatePresence } from "motion/react";
+import { useSettings } from "../contexts/SettingsContext";
+import { useAuth } from "../contexts/AuthContext";
+import { useWishlist } from "../contexts/WishlistContext";
+import SettingsModal from "./SettingsModal";
+import SearchBar from "./SearchBar";
+import { POPULAR_ATTRACTIONS } from "../data/mockData";
+import {
+  getCurrencyFlag,
+  getCurrencyCountryCode,
+} from "../utils/currencyFlags";
 
-export default function Header({ 
-  onExplore, 
-  onSearch, 
+const POPULAR_REGIONS = [
+  {
+    name: "Europe",
+    query: "Europe",
+    image:
+      "https://images.unsplash.com/photo-1490642914619-7955a3fd483c?auto=format&fit=crop&w=120&h=120&q=80",
+  },
+  {
+    name: "Asia",
+    query: "Asia",
+    image:
+      "https://images.unsplash.com/photo-1535139262971-c51845709a48?auto=format&fit=crop&w=120&h=120&q=80",
+  },
+  {
+    name: "North America",
+    query: "North America",
+    image:
+      "https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?auto=format&fit=crop&w=120&h=120&q=80",
+  },
+  {
+    name: "Oceania",
+    query: "Oceania",
+    image:
+      "https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?auto=format&fit=crop&w=120&h=120&q=80",
+  },
+  {
+    name: "Middle East",
+    query: "Middle East",
+    image:
+      "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=120&h=120&q=80",
+  },
+];
+
+const POPULAR_DESTINATIONS = [
+  {
+    name: "Tokyo",
+    image:
+      "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=120&h=120&q=80",
+  },
+  {
+    name: "Osaka",
+    image:
+      "https://images.unsplash.com/photo-1542931287-023b922fa89b?auto=format&fit=crop&w=120&h=120&q=80",
+  },
+  {
+    name: "Paris",
+    image:
+      "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=120&h=120&q=80",
+  },
+  {
+    name: "Rome",
+    image:
+      "https://images.unsplash.com/photo-1552832230-c0197dd311b5?auto=format&fit=crop&w=120&h=120&q=80",
+  },
+  {
+    name: "Istanbul",
+    image:
+      "https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?auto=format&fit=crop&w=120&h=120&q=80",
+  },
+  {
+    name: "New York",
+    image:
+      "https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?auto=format&fit=crop&w=120&h=120&q=80",
+  },
+  {
+    name: "London",
+    image:
+      "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=120&h=120&q=80",
+  },
+  {
+    name: "Barcelona",
+    image:
+      "https://images.unsplash.com/photo-1583422409516-2895a77efedd?auto=format&fit=crop&w=120&h=120&q=80",
+  },
+  {
+    name: "Amsterdam",
+    image:
+      "https://images.unsplash.com/photo-1534351590666-13e3e96b5017?auto=format&fit=crop&w=120&h=120&q=80",
+  },
+  {
+    name: "Lisbon",
+    image:
+      "https://images.unsplash.com/photo-1509840841025-9088ba78a826?auto=format&fit=crop&w=120&h=120&q=80",
+  },
+  {
+    name: "Dubai",
+    image:
+      "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=120&h=120&q=80",
+  },
+  {
+    name: "Singapore",
+    image:
+      "https://images.unsplash.com/photo-1525596662741-e94ff9f26de1?auto=format&fit=crop&w=120&h=120&q=80",
+  },
+  {
+    name: "Sydney",
+    image:
+      "https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?auto=format&fit=crop&w=120&h=120&q=80",
+  },
+  {
+    name: "Bangkok",
+    image:
+      "https://images.unsplash.com/photo-1508009603885-50cf7c579365?auto=format&fit=crop&w=120&h=120&q=80",
+  },
+  {
+    name: "Zurich",
+    image:
+      "https://images.unsplash.com/photo-1515488764276-beab7607c1e6?auto=format&fit=crop&w=120&h=120&q=80",
+  },
+  {
+    name: "Florence",
+    image:
+      "https://images.unsplash.com/photo-1528114039593-4366cc08227d?auto=format&fit=crop&w=120&h=120&q=80",
+  },
+];
+
+export default function Header({
+  onExplore,
+  onSearch,
   onNavigate,
   onWishlistOpen,
-  activePage = 'home',
-  activeDestination = null
-}: { 
-  onExplore?: () => void, 
-  onSearch?: (q: string) => void, 
-  onNavigate?: (page: string) => void,
-  onWishlistOpen?: () => void,
-  activePage?: string,
-  activeDestination?: string | null
+  activePage = "home",
+  activeDestination = null,
+}: {
+  onExplore?: () => void;
+  onSearch?: (q: string) => void;
+  onNavigate?: (page: "home" | "attractions-and-museums" | "hot-deals") => void;
+  onWishlistOpen?: () => void;
+  activePage?: "home" | "attractions-and-museums" | "hot-deals";
+  activeDestination?: string | null;
 }) {
   const { user, setAuthModalOpen, logout } = useAuth();
   const { wishlist } = useWishlist();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileRegionOpen, setMobileRegionOpen] = useState(false);
+  const [mobileDestOpen, setMobileDestOpen] = useState(false);
   const [settingsModalOpen, setSettingsModalOpen] = useState(false);
   const [themeDropdownOpen, setThemeDropdownOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const [desktopMenuOpen, setDesktopMenuOpen] = useState(false);
-  const [desktopSearchOpen, setDesktopSearchOpen] = useState(false);
+  const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
 
   const { currency, theme, setTheme, t } = useSettings();
+
   const [scrolled, setScrolled] = useState(false);
+  const pageName = activePage as
+    | "home"
+    | "attractions-and-museums"
+    | "hot-deals";
 
   useEffect(() => {
+    let ticking = false;
     const handleScroll = () => {
-      setScrolled(window.scrollY > 150);
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setScrolled(window.scrollY > 150);
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-
-  const showHeaderSearch = scrolled || activePage !== 'home' || activeDestination !== null;
 
   useEffect(() => {
     if (mobileMenuOpen) {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = "unset";
     }
-    return () => { document.body.style.overflow = 'unset'; };
+    return () => {
+      document.body.style.overflow = "unset";
+    };
   }, [mobileMenuOpen]);
 
   const headerActive = true;
 
   return (
     <>
-      <header 
-        className={`sticky top-0 left-0 right-0 z-50 flex flex-col transition-all duration-300 ${!scrolled && activePage === 'home' && !activeDestination ? 'bg-[#F4F7F9] dark:bg-slate-950 shadow-none' : 'bg-white dark:bg-slate-900 shadow-sm'}`}
+      <header
+        className={`sticky top-0 left-0 right-0 z-50 flex flex-col transition-all duration-300 ${!scrolled && pageName === "home" && !activeDestination ? "bg-[#F4F7F9] dark:bg-slate-950 shadow-none" : "bg-white dark:bg-slate-900 shadow-sm"}`}
       >
-        <div className={`h-[54px] sm:h-[60px] relative z-50 backdrop-blur-md transition-colors ${!scrolled && activePage === 'home' && !activeDestination ? 'bg-[#F4F7F9]/95 dark:bg-slate-950/95 border-b border-gray-200/60 dark:border-slate-800/50 md:border-b-transparent' : 'bg-white/95 dark:bg-slate-900/95 border-b border-gray-100/80 dark:border-slate-850/80'}`}>
+        <div
+          className={`h-[54px] sm:h-[60px] relative z-50 backdrop-blur-md transition-colors ${!scrolled && pageName === "home" && !activeDestination ? "bg-[#F4F7F9]/95 dark:bg-slate-950/95 border-b border-gray-200/60 dark:border-slate-800/50 md:border-b-transparent" : "bg-white/95 dark:bg-slate-900/95 border-b border-gray-100/80 dark:border-slate-850/80"}`}
+        >
           <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center justify-between gap-3 sm:gap-4 md:gap-8">
-            <div 
-              className="flex items-center cursor-pointer shrink-0 transition-all duration-300 hover:opacity-90 active:scale-95 select-none"
+            <div
+              className="flex items-center cursor-pointer shrink-0 transition-all duration-300 hover:opacity-90 active:scale-95 select-none mr-2 sm:mr-4 md:mr-6"
               onClick={() => {
                 if (onExplore) onExplore();
                 window.scrollTo(0, 0);
               }}
             >
-              <span className="font-black tracking-tighter text-[26px] sm:text-[31px] text-[#e3000f] dark:text-[#e3000f] transition-colors leading-none">
+              <span className="font-black tracking-tight text-[26px] sm:text-[31px] text-brand dark:text-brand transition-colors leading-none">
                 Tiqsey
               </span>
             </div>
 
-            {/* Desktop Navigation & Actions (Renders together to eliminate empty center space) */}
-            <div className="hidden md:flex items-center justify-end flex-1 h-full min-w-0 gap-5 lg:gap-7 xl:gap-[32px]">
-              <nav className="flex items-center h-full relative select-none gap-4 lg:gap-6 xl:gap-[28px]">
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex items-center flex-1 h-full min-w-0 ml-4 lg:ml-8">
+              <nav
+                className="flex items-center h-full relative select-none gap-2 lg:gap-4 xl:gap-[20px]"
+                onMouseLeave={() => setHoveredIdx(null)}
+              >
                 {[
-                  { name: 'Home', label: t('navHome'), active: activePage === 'home' && !activeDestination, items: [], icon: Home },
-                  { 
-                    name: 'Attractions & Tours', 
-                    label: t('navAttractionsAndTours'),
-                    active: activePage === 'all-attractions', 
-                    items: [],
-                    icon: FerrisWheel
-                  }
+                  {
+                    name: "Home",
+                    label: t("navHome"),
+                    active: pageName === "home" && !activeDestination,
+                    type: undefined as string | undefined,
+                  },
+                  {
+                    name: "Hot Deals",
+                    label: "Hot Deals 🔥",
+                    active: (pageName as string) === "hot-deals",
+                    type: undefined as string | undefined,
+                  },
+                  {
+                    name: "Attractions & Museums",
+                    label: "Attractions & Museums",
+                    active: (pageName as string) === "attractions-and-museums",
+                    type: undefined as string | undefined,
+                  },
                 ].map((item, idx) => (
-                  <div key={idx} className="group relative h-full flex items-center">
-                    <a 
+                  <div
+                    key={idx}
+                    className="group relative h-full flex items-center px-2.5 transition-colors cursor-pointer"
+                    onMouseEnter={() => setHoveredIdx(idx)}
+                  >
+                    {hoveredIdx === idx && (
+                      <motion.div
+                        layoutId="nav-hover-pill"
+                        className="absolute inset-x-0.5 inset-y-2 rounded-full bg-slate-100/80 dark:bg-slate-800/60 -z-10"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{
+                          type: "spring",
+                          stiffness: 380,
+                          damping: 28,
+                        }}
+                      />
+                    )}
+                    {(hoveredIdx !== null
+                      ? hoveredIdx === idx
+                      : item.active) && (
+                      <motion.div
+                        layoutId="nav-active-underline"
+                        className="absolute bottom-0 left-2.5 right-2.5 h-0.5 bg-brand dark:bg-brand rounded-full z-10"
+                        transition={{
+                          type: "spring",
+                          stiffness: 380,
+                          damping: 28,
+                        }}
+                      />
+                    )}
+                    <a
                       href="#"
                       onClick={(e) => {
                         e.preventDefault();
-                        if (item.name === 'Attractions & Tours') {
-                          if (onNavigate) onNavigate('all-attractions');
-                        } else {
+                        if (item.name === "Home") {
                           if (onExplore) onExplore();
+                          if (onNavigate) onNavigate("home");
+                        } else if (item.name === "Attractions & Museums") {
+                          if (onNavigate) onNavigate("attractions-and-museums");
+                        } else if (item.name === "Hot Deals") {
+                          if (onNavigate) onNavigate("hot-deals");
                         }
                       }}
-                      className={`text-[13.5px] lg:text-[14.5px] xl:text-[15px] font-bold tracking-tight whitespace-nowrap transition-all flex items-center gap-1.5 h-full border-b-[2px] transition-all duration-200 ${
-                        item.active 
-                          ? 'text-brand border-brand' 
-                          : 'text-slate-600 dark:text-slate-300 hover:text-brand dark:hover:text-brand border-transparent hover:border-brand/20'
+                      className={`text-[14px] xl:text-[15px] font-semibold tracking-tight whitespace-nowrap transition-colors flex items-center gap-1.5 h-full ${
+                        item.active
+                          ? "text-brand"
+                          : "text-slate-600 dark:text-slate-300 group-hover:text-brand dark:group-hover:text-brand"
                       }`}
                     >
-                      {item.icon && <item.icon className="w-[16px] h-[16px] lg:w-[18px] lg:h-[18px] xl:w-[19px] xl:h-[19px] text-current shrink-0" strokeWidth={1.75} />}
                       <span>{item.label}</span>
-                      {item.items.length > 0 && <ChevronDown className="w-3.5 h-3.5 text-slate-400 group-hover:rotate-180 transition-transform duration-250 group-hover:text-brand" />}
                     </a>
-                    
-                    {/* Mega Menu Dropdown */}
-                    {item.items.length > 0 && (
-                      <div className="absolute top-full left-1/2 -translate-x-1/2 pt-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
-                        <div className="bg-white dark:bg-slate-900 shadow-2xl shadow-brand/10 border border-gray-100 dark:border-slate-800 rounded-2xl p-8 w-[90vw] lg:w-[840px] max-w-full grid grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-6 transform origin-top translate-y-2 group-hover:translate-y-0 transition-transform duration-300 relative">
-                          {item.items.map((col, colIdx) => (
-                            <div key={colIdx} className="flex flex-col gap-5">
-                              <h4 className="text-[11px] font-black uppercase tracking-widest text-[#1A2B48] dark:text-slate-300 flex items-center gap-2 pb-2 border-b border-gray-100 dark:border-slate-800">
-                                {col.title}
-                              </h4>
-                              <div className="flex flex-col gap-2.5 max-h-[280px] overflow-y-auto pr-1 select-none scrollbar-thin">
-                                {col.links.map((link, linkIdx) => (
-                                  <a 
-                                    key={linkIdx} 
-                                    href="#" 
-                                    onClick={(e) => {
-                                      e.preventDefault();
-                                      link.action();
-                                    }}
-                                    className="group/link text-xs font-semibold text-gray-500 dark:text-slate-400 hover:text-brand hover:translate-x-1 transition-all flex items-center gap-2"
-                                  >
-                                    <span className="w-1 h-1 rounded-full bg-brand/50 opacity-0 group-hover/link:opacity-100 transition-opacity shrink-0" />
-                                    <span className="truncate" title={link.name}>{link.name}</span>
-                                  </a>
-                                ))}
+
+                    {item.type === "region" && (
+                      <div className="absolute top-full left-1/2 -translate-x-1/2 mt-0 pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                        <div className="bg-white dark:bg-slate-900 shadow-2xl border border-slate-100 dark:border-slate-800 rounded-2xl p-6 w-[860px] transform origin-top scale-95 group-hover:scale-100 transition-all duration-200 grid grid-cols-3 gap-4">
+                          {POPULAR_REGIONS.map((region, rIdx) => (
+                            <a
+                              key={rIdx}
+                              href="#"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                if (onSearch) onSearch(region.query);
+                              }}
+                              className="flex items-center gap-3.5 hover:bg-slate-50 dark:hover:bg-slate-800/50 p-2.5 rounded-xl transition-all group/subitem"
+                            >
+                              <div className="w-20 h-14 rounded-lg overflow-hidden shrink-0 border border-slate-100 dark:border-slate-800 shadow-sm bg-slate-100 dark:bg-slate-850">
+                                <img
+                                  src={region.image}
+                                  alt={region.name}
+                                  className="w-full h-full object-cover transition-transform duration-300 group-hover/subitem:scale-110"
+                                  referrerPolicy="no-referrer"
+                                />
                               </div>
-                            </div>
+                              <div className="flex flex-col text-left">
+                                <span className="text-[10px] font-semibold text-slate-400 dark:text-slate-500 tracking-wider uppercase">
+                                  Things to do in
+                                </span>
+                                <span className="text-[15px] font-bold text-slate-800 dark:text-slate-100 tracking-tight transition-colors group-hover/subitem:text-brand leading-normal">
+                                  {region.name}
+                                </span>
+                              </div>
+                            </a>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {item.type === "destination" && (
+                      <div className="absolute top-full left-1/2 -translate-x-1/2 mt-0 pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                        <div className="bg-white dark:bg-slate-900 shadow-2xl border border-slate-100 dark:border-slate-800 rounded-2xl p-6 w-[860px] transform origin-top scale-95 group-hover:scale-100 transition-all duration-200 grid grid-cols-4 gap-4">
+                          {POPULAR_DESTINATIONS.map((dest, dIdx) => (
+                            <a
+                              key={dIdx}
+                              href="#"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                if (onSearch) onSearch(dest.name);
+                              }}
+                              className="flex items-center gap-3.5 hover:bg-slate-50 dark:hover:bg-slate-800/50 p-2 rounded-xl transition-all group/subitem"
+                            >
+                              <div className="w-16 h-11 rounded-lg overflow-hidden shrink-0 border border-slate-100 dark:border-slate-800 shadow-sm bg-slate-100 dark:bg-slate-850">
+                                <img
+                                  src={dest.image}
+                                  alt={dest.name}
+                                  className="w-full h-full object-cover transition-transform duration-300 group-hover/subitem:scale-110"
+                                  referrerPolicy="no-referrer"
+                                />
+                              </div>
+                              <div className="flex flex-col text-left">
+                                <span className="text-[10px] font-semibold text-slate-400 dark:text-slate-500 tracking-wider uppercase">
+                                  Things to do in
+                                </span>
+                                <span className="text-[15px] font-bold text-slate-800 dark:text-slate-100 tracking-tight transition-colors group-hover/subitem:text-brand leading-normal">
+                                  {dest.name}
+                                </span>
+                              </div>
+                            </a>
                           ))}
                         </div>
                       </div>
@@ -144,46 +384,59 @@ export default function Header({
                   </div>
                 ))}
               </nav>
+            </div>
 
-              {/* Desktop Actions */}
-              <div className="flex items-center gap-1.5 lg:gap-2 shrink-0">
-              {showHeaderSearch && (
-                <div className="w-[180px] lg:w-[240px] xl:w-[320px] shrink-0 transition-all duration-300">
-                  <SearchBar 
-                    isCompact={true} 
-                    onSearch={(query) => {
-                      if (onSearch) onSearch(query);
-                    }}
-                    placeholder={t('searchPlaceholder') || "Search attractions..."}
-                  />
-                </div>
-              )}
-
-
+            {/* Desktop Actions */}
+            <div className="hidden md:flex items-center justify-end gap-1.5 lg:gap-2.5 shrink-0">
+              {/* Desktop Search Bar */}
+              <div className="w-[240px] lg:w-[320px] xl:w-[400px] relative hidden md:block">
+                <SearchBar
+                  isCompact={true}
+                  onSearch={(query) => {
+                    if (onSearch) onSearch(query);
+                  }}
+                  placeholder="Search..."
+                  className="w-full"
+                />
+              </div>
 
               {/* Combined Settings Trigger */}
-              <button 
+              <button
                 onClick={() => setSettingsModalOpen(true)}
-                className="flex items-center gap-2 h-10 px-4 rounded-full text-slate-700 dark:text-slate-300 hover:text-brand dark:hover:text-brand hover:bg-brand/5 dark:hover:bg-brand/10 border border-[#e3000f]/20 dark:border-[#e3000f]/30 hover:border-[#e3000f]/50 transition-all active:scale-95 select-none cursor-pointer shrink-0 shadow-sm shadow-brand/[0.01]"
+                className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-100/80 dark:hover:bg-slate-800/80 transition-all active:scale-95 select-none cursor-pointer shrink-0 border border-transparent font-sans"
                 title={`${currency.code.toUpperCase()}`}
               >
-                <div className="w-5 h-5 rounded-full overflow-hidden shrink-0 flex items-center justify-center bg-slate-150 dark:bg-slate-850">
-                  <Globe className="w-3.5 h-3.5 text-slate-500" />
+                <div className="w-6 h-4.5 select-none shrink-0 border border-slate-200 dark:border-slate-800 rounded overflow-hidden bg-slate-100 dark:bg-slate-900 shadow-sm flex items-center justify-center">
+                  <img
+                    src={`https://flagcdn.com/w40/${getCurrencyCountryCode(currency.code)}.png`}
+                    alt={`${currency.code} flag`}
+                    className="w-full h-full object-cover"
+                    referrerPolicy="no-referrer"
+                    loading="lazy"
+                  />
                 </div>
-                <span className="w-[1px] h-3.5 bg-slate-200/80 dark:bg-slate-750 shrink-0" />
-                <span className="text-[13.5px] font-bold text-[#1A2B48] dark:text-slate-200 tracking-wide">{currency.code}</span>
+                <span className="text-[14px] font-semibold text-slate-700 dark:text-slate-200 tracking-wide flex items-center gap-1 font-sans">
+                  {currency.code} {currency.symbol}
+                </span>
+                <ChevronDown
+                  className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400"
+                  strokeWidth={2.5}
+                />
               </button>
 
               {/* Desktop Wishlist Button */}
-              <button 
+              <button
                 onClick={onWishlistOpen}
                 className="relative flex items-center justify-center p-2.5 rounded-full text-slate-700 dark:text-slate-300 hover:text-brand dark:hover:text-brand hover:bg-slate-100/80 dark:hover:bg-slate-800/80 transition-all active:scale-95 select-none cursor-pointer shrink-0"
                 title="Wishlist"
                 aria-label="Wishlist"
               >
-                <Heart className={`w-5 h-5 transition-colors ${wishlist.length > 0 ? 'text-[#e3000f] fill-[#e3000f]' : 'text-current'}`} strokeWidth={2} />
+                <Heart
+                  className={`w-5 h-5 transition-colors ${wishlist.length > 0 ? "text-brand fill-brand" : "text-current"}`}
+                  strokeWidth={2}
+                />
                 {wishlist.length > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 bg-[#e3000f] text-white text-[9.5px] font-black w-4.5 h-4.5 rounded-full flex items-center justify-center border border-white dark:border-slate-900 select-none">
+                  <span className="absolute -top-0.5 -right-0.5 bg-brand text-white text-[9.5px] font-black w-4.5 h-4.5 rounded-full flex items-center justify-center border border-white dark:border-slate-900 select-none">
                     {wishlist.length}
                   </span>
                 )}
@@ -194,7 +447,9 @@ export default function Header({
                 <button
                   onClick={() => setDesktopMenuOpen(!desktopMenuOpen)}
                   className={`flex items-center justify-center p-2.5 rounded-full text-slate-700 dark:text-slate-300 hover:text-brand dark:hover:text-brand hover:bg-slate-100/80 dark:hover:bg-slate-800/80 transition-all active:scale-95 select-none cursor-pointer shrink-0 ${
-                    desktopMenuOpen ? 'bg-slate-100/90 dark:bg-slate-800 text-brand' : ''
+                    desktopMenuOpen
+                      ? "bg-slate-100/90 dark:bg-slate-800 text-brand"
+                      : ""
                   }`}
                   title="Menu"
                 >
@@ -204,9 +459,9 @@ export default function Header({
                 <AnimatePresence>
                   {desktopMenuOpen && (
                     <>
-                      <div 
-                        className="fixed inset-0 z-[55]" 
-                        onClick={() => setDesktopMenuOpen(false)} 
+                      <div
+                        className="fixed inset-0 z-[55]"
+                        onClick={() => setDesktopMenuOpen(false)}
                       />
                       <motion.div
                         initial={{ opacity: 0, y: 10, scale: 0.95 }}
@@ -220,21 +475,42 @@ export default function Header({
                             onClick={() => {
                               setDesktopMenuOpen(false);
                               if (onExplore) onExplore();
+                              if (onNavigate) onNavigate("home");
                             }}
                             className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-[#1A2B48] dark:text-slate-100 hover:bg-slate-50 dark:hover:bg-slate-800 font-bold text-sm transition-colors text-left cursor-pointer"
                           >
-                            <Home className="w-4.5 h-4.5 text-slate-500" strokeWidth={1.75} />
+                            <Home
+                              className="w-4.5 h-4.5 text-slate-500"
+                              strokeWidth={1.75}
+                            />
                             <span>Home</span>
                           </button>
                           <button
                             onClick={() => {
                               setDesktopMenuOpen(false);
-                              if (onNavigate) onNavigate('all-attractions');
+                              if (onNavigate) onNavigate("hot-deals");
+                            }}
+                            className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-amber-650 dark:text-amber-400 hover:bg-slate-50 dark:hover:bg-slate-800 font-bold text-sm transition-colors text-left cursor-pointer"
+                          >
+                            <Flame
+                              className="w-4.5 h-4.5 text-amber-500 fill-amber-500/10"
+                              strokeWidth={1.75}
+                            />
+                            <span>Hot Deals</span>
+                          </button>
+                          <button
+                            onClick={() => {
+                              setDesktopMenuOpen(false);
+                              if (onNavigate)
+                                onNavigate("attractions-and-museums");
                             }}
                             className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-[#1A2B48] dark:text-slate-100 hover:bg-slate-50 dark:hover:bg-slate-800 font-bold text-sm transition-colors text-left cursor-pointer"
                           >
-                            <FerrisWheel className="w-4.5 h-4.5 text-slate-550" strokeWidth={1.75} />
-                            <span>Attractions & Tours</span>
+                            <FerrisWheel
+                              className="w-4.5 h-4.5 text-slate-500"
+                              strokeWidth={1.75}
+                            />
+                            <span>Attractions & Museums</span>
                           </button>
                         </div>
                       </motion.div>
@@ -243,67 +519,70 @@ export default function Header({
                 </AnimatePresence>
               </div>
             </div>
-          </div>
 
             {/* Mobile Menu Toggle & Wishlist button */}
-            <div className="flex md:hidden items-center gap-1">
-              <button 
+            <div className="flex md:hidden items-center gap-1 px-1">
+              {/* Compact Settings Trigger */}
+              <button
+                onClick={() => setSettingsModalOpen(true)}
+                className="flex items-center gap-1.5 h-8 px-2 rounded-full text-slate-700 dark:text-slate-300 hover:bg-slate-100/60 dark:hover:bg-slate-850/60 border border-slate-200/60 dark:border-slate-800 transition-all active:scale-95 select-none cursor-pointer shrink-0 bg-white/80 dark:bg-slate-900/80 shadow-sm"
+                title={`${currency.code.toUpperCase()}`}
+              >
+                <div className="w-5 h-3.5 select-none shrink-0 border border-slate-100 dark:border-slate-800 rounded-[2px] overflow-hidden bg-slate-100 dark:bg-slate-900 flex items-center justify-center">
+                  <img
+                    src={`https://flagcdn.com/w40/${getCurrencyCountryCode(currency.code)}.png`}
+                    alt={`${currency.code} flag`}
+                    className="w-full h-full object-cover"
+                    referrerPolicy="no-referrer"
+                    loading="lazy"
+                  />
+                </div>
+              </button>
+
+              <button
                 onClick={onWishlistOpen}
-                className="relative p-2.5 rounded-full text-slate-700 dark:text-slate-300 hover:text-brand dark:hover:text-brand hover:bg-slate-105/50 dark:hover:bg-slate-800/50 transition-all active:scale-95 cursor-pointer flex items-center justify-center shrink-0"
+                className="relative p-2 rounded-full text-slate-700 dark:text-slate-300 hover:text-brand dark:hover:text-brand hover:bg-slate-105/50 dark:hover:bg-slate-800/50 transition-all active:scale-95 cursor-pointer flex items-center justify-center shrink-0"
                 title="Wishlist"
                 aria-label="Wishlist"
               >
-                <Heart className={`w-5 h-5 transition-colors ${wishlist.length > 0 ? 'text-[#e3000f] fill-[#e3000f]' : 'text-current'}`} strokeWidth={2} />
+                <Heart
+                  className={`w-5 h-5 transition-colors ${wishlist.length > 0 ? "text-brand fill-brand" : "text-current"}`}
+                  strokeWidth={2}
+                />
                 {wishlist.length > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 bg-[#e3000f] text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center border border-white dark:border-slate-900 select-none scale-90">
+                  <span className="absolute -top-0.5 -right-0.5 bg-brand text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center border border-white dark:border-slate-900 select-none scale-90">
                     {wishlist.length}
                   </span>
                 )}
               </button>
 
-              <button 
-                className="p-2 ml-1 rounded-lg"
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                aria-label="Toggle Menu"
+              <button
+                onClick={() => setMobileMenuOpen(true)}
+                className="relative p-2 rounded-full text-slate-700 dark:text-slate-300 hover:bg-slate-105/50 dark:hover:bg-slate-800/50 transition-all active:scale-95 cursor-pointer flex items-center justify-center shrink-0"
+                aria-label="Menu"
               >
-                {mobileMenuOpen ? (
-                  <X className="w-5 h-5 text-gray-900 dark:text-slate-100" />
-                ) : (
-                  <Menu className="w-5 h-5 text-gray-900 dark:text-slate-100" />
-                )}
+                <Menu className="w-5 h-5 stroke-[2.5]" />
               </button>
             </div>
           </div>
         </div>
 
-        {/* Secondary Row for Sticky Search Bar on Mobile */}
-        <AnimatePresence>
-          {showHeaderSearch && (
-            <motion.div
-              initial={{ height: 0, opacity: 0, y: -10 }}
-              animate={{ height: 'auto', opacity: 1, y: 0 }}
-              exit={{ height: 0, opacity: 0, y: -10 }}
-              transition={{ type: 'tween', ease: [0.16, 1, 0.3, 1], duration: 0.32 }}
-              className="md:hidden w-full border-t border-gray-100 dark:border-slate-800/80 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md px-4 py-2.5 shadow-sm overflow-visible"
-            >
-              <SearchBar 
-                isCompact={true} 
-                onSearch={(query) => {
-                  if (onSearch) onSearch(query);
-                }}
-                placeholder="Search attractions..."
-              />
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-
+        {/* Mobile Search Bar */}
+        <div className="md:hidden px-4 pb-3 pt-1">
+          <SearchBar
+            isCompact={true}
+            onSearch={(query) => {
+              if (onSearch) onSearch(query);
+            }}
+            placeholder="Find places, tours, things to do..."
+          />
+        </div>
 
         {/* Universal Menu Drawer */}
         <AnimatePresence>
           {mobileMenuOpen && (
             <>
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
@@ -311,19 +590,19 @@ export default function Header({
                 onClick={() => setMobileMenuOpen(false)}
               />
               <motion.div
-                initial={{ x: '-100%' }}
+                initial={{ x: "-100%" }}
                 animate={{ x: 0 }}
-                exit={{ x: '-100%' }}
-                transition={{ type: 'spring', bounce: 0, duration: 0.4 }}
+                exit={{ x: "-100%" }}
+                transition={{ type: "spring", bounce: 0, duration: 0.4 }}
                 className="fixed top-0 left-0 bottom-0 w-[85vw] max-w-[360px] bg-white dark:bg-slate-950 z-[70] shadow-2xl flex flex-col overflow-y-auto"
               >
                 <div className="flex items-center justify-between p-6 border-b border-gray-100 dark:border-slate-800">
                   <div className="flex items-center gap-2">
-                    <span className="font-black tracking-tighter text-3xl text-[#e3000f] dark:text-[#e3000f] select-none">
+                    <span className="font-black tracking-tight text-3xl text-brand dark:text-brand select-none">
                       Tiqsey
                     </span>
                   </div>
-                  <button 
+                  <button
                     onClick={() => setMobileMenuOpen(false)}
                     className="p-2 rounded-lg bg-gray-50 dark:bg-slate-900 text-gray-500 hover:text-gray-900 dark:hover:text-white transition-colors"
                   >
@@ -333,48 +612,195 @@ export default function Header({
 
                 <div className="flex flex-col p-6 gap-6 flex-1">
                   <div className="flex flex-col gap-2">
-                    <span className="text-[10px] font-black uppercase tracking-widest text-[#1A2B48] dark:text-slate-400 px-1 mb-2">{t('explore')}</span>
+                    <span className="text-[10px] font-black uppercase tracking-widest text-[#1A2B48] dark:text-slate-400 px-1 mb-2">
+                      {t("explore")}
+                    </span>
                     {[
-                      { name: 'Home', label: t('navHome'), active: activePage === 'home' && !activeDestination, icon: Home },
-                      { name: 'Attractions & Tours', label: t('navAttractionsAndTours'), active: activePage === 'all-attractions', icon: FerrisWheel }
+                      {
+                        name: "Home",
+                        label: t("navHome"),
+                        active: pageName === "home" && !activeDestination,
+                        icon: Home,
+                      },
+                      {
+                        name: "Hot Deals",
+                        label: "Hot Deals 🔥",
+                        active: (pageName as string) === "hot-deals",
+                        icon: Flame,
+                      },
+                      {
+                        name: "Attractions & Museums",
+                        label: "Attractions & Museums",
+                        active:
+                          (pageName as string) === "attractions-and-museums",
+                        icon: FerrisWheel,
+                      },
                     ].map((item) => (
-                      <button 
+                      <button
                         key={item.name}
                         onClick={() => {
                           setMobileMenuOpen(false);
-                          if (item.name === 'Attractions & Tours') {
-                            if (onNavigate) onNavigate('all-attractions');
-                          } else {
+                          if (item.name === "Home") {
                             if (onExplore) onExplore();
+                            if (onNavigate) onNavigate("home");
+                          } else if (item.name === "Attractions & Museums") {
+                            if (onNavigate)
+                              onNavigate("attractions-and-museums");
+                          } else if (item.name === "Hot Deals") {
+                            if (onNavigate) onNavigate("hot-deals");
                           }
                         }}
                         className={`flex items-center justify-between text-left gap-3 text-lg font-bold py-3 px-4 rounded-xl transition-colors ${
-                          item.active 
-                            ? 'bg-brand/5 text-brand dark:bg-brand/10' 
-                            : 'text-gray-900 hover:bg-gray-50 dark:text-slate-100 dark:hover:bg-slate-900'
+                          item.active
+                            ? "bg-brand/5 text-brand dark:bg-brand/10"
+                            : "text-gray-900 hover:bg-gray-50 dark:text-slate-100 dark:hover:bg-slate-900"
                         }`}
                       >
                         <div className="flex items-center gap-3">
-                          {item.icon && <item.icon className="w-5 h-5 text-current" />}
+                          {item.icon && (
+                            <item.icon className="w-5 h-5 text-current" />
+                          )}
                           <span>{item.label}</span>
                         </div>
                       </button>
                     ))}
+
+                    {/* Browse by Region Collapsible */}
+                    <div className="flex flex-col">
+                      <button
+                        onClick={() => setMobileRegionOpen(!mobileRegionOpen)}
+                        className={`flex items-center justify-between text-left gap-3 text-lg font-bold py-3 px-4 rounded-xl transition-colors text-gray-900 hover:bg-gray-50 dark:text-slate-100 dark:hover:bg-slate-900`}
+                      >
+                        <div className="flex items-center gap-3">
+                          <Compass className="w-5 h-5 text-current" />
+                          <span>{t("navRegions")}</span>
+                        </div>
+                        <ChevronDown
+                          className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${mobileRegionOpen ? "rotate-180" : ""}`}
+                        />
+                      </button>
+                      <AnimatePresence>
+                        {mobileRegionOpen && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: "auto", opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            className="overflow-hidden pl-4 pr-2 flex flex-col gap-1.5 mt-1"
+                          >
+                            {POPULAR_REGIONS.map((region, idx) => (
+                              <button
+                                key={idx}
+                                onClick={() => {
+                                  setMobileMenuOpen(false);
+                                  if (onSearch) onSearch(region.query);
+                                }}
+                                className="flex items-center gap-3 p-2 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-900/50 text-left w-full transition-all cursor-pointer"
+                              >
+                                <img
+                                  src={region.image}
+                                  alt={region.name}
+                                  className="w-9 h-9 rounded-full object-cover border border-slate-100 dark:border-slate-800"
+                                  referrerPolicy="no-referrer"
+                                />
+                                <div className="flex flex-col">
+                                  <span className="text-[9px] text-slate-400 uppercase font-medium">
+                                    Things to do in
+                                  </span>
+                                  <span className="text-sm font-bold text-slate-800 dark:text-slate-100">
+                                    {region.name}
+                                  </span>
+                                </div>
+                              </button>
+                            ))}
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+
+                    {/* Browse by Destination Collapsible */}
+                    <div className="flex flex-col">
+                      <button
+                        onClick={() => setMobileDestOpen(!mobileDestOpen)}
+                        className={`flex items-center justify-between text-left gap-3 text-lg font-bold py-3 px-4 rounded-xl transition-colors text-gray-900 hover:bg-gray-50 dark:text-slate-100 dark:hover:bg-slate-900`}
+                      >
+                        <div className="flex items-center gap-3">
+                          <MapPin className="w-5 h-5 text-current" />
+                          <span>{t("navCities")}</span>
+                        </div>
+                        <ChevronDown
+                          className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${mobileDestOpen ? "rotate-180" : ""}`}
+                        />
+                      </button>
+                      <AnimatePresence>
+                        {mobileDestOpen && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: "auto", opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            className="overflow-hidden pl-4 pr-2 flex flex-col gap-1.5 mt-1 max-h-[300px] overflow-y-auto scrollbar-none"
+                          >
+                            {POPULAR_DESTINATIONS.map((dest, idx) => (
+                              <button
+                                key={idx}
+                                onClick={() => {
+                                  setMobileMenuOpen(false);
+                                  if (onSearch) onSearch(dest.name);
+                                }}
+                                className="flex items-center gap-3 p-2 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-900/50 text-left w-full transition-all cursor-pointer"
+                              >
+                                <img
+                                  src={dest.image}
+                                  alt={dest.name}
+                                  className="w-9 h-9 rounded-full object-cover border border-slate-100 dark:border-slate-800"
+                                  referrerPolicy="no-referrer"
+                                />
+                                <div className="flex flex-col">
+                                  <span className="text-[9px] text-slate-400 uppercase font-medium">
+                                    Things to do in
+                                  </span>
+                                  <span className="text-sm font-bold text-slate-800 dark:text-slate-100">
+                                    {dest.name}
+                                  </span>
+                                </div>
+                              </button>
+                            ))}
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
                   </div>
 
                   <div className="flex flex-col gap-2">
-                    <span className="text-[10px] font-black uppercase tracking-widest text-[#1A2B48] dark:text-slate-400 px-1 mb-2">Currency</span>
-                    <button 
-                      onClick={() => { setSettingsModalOpen(true); setMobileMenuOpen(false); }}
+                    <span className="text-[10px] font-black uppercase tracking-widest text-[#1A2B48] dark:text-slate-400 px-1 mb-2">
+                      Currency
+                    </span>
+                    <button
+                      onClick={() => {
+                        setSettingsModalOpen(true);
+                        setMobileMenuOpen(false);
+                      }}
                       className="flex items-center gap-3 text-lg font-medium text-gray-900 hover:bg-gray-50 dark:hover:bg-slate-900 dark:text-slate-100 py-3 px-4 rounded-xl transition-colors"
                     >
-                      <span className="text-xl select-none leading-none shrink-0">{getCurrencyFlag(currency.code)}</span>
-                      <span className="uppercase font-semibold">{currency.code}</span>
+                      <div className="w-7 h-5 select-none shrink-0 border border-slate-200 dark:border-slate-800 rounded overflow-hidden bg-slate-100 dark:bg-slate-900 shadow-sm flex items-center justify-center">
+                        <img
+                          src={`https://flagcdn.com/w40/${getCurrencyCountryCode(currency.code)}.png`}
+                          alt={`${currency.code} flag`}
+                          className="w-full h-full object-cover"
+                          referrerPolicy="no-referrer"
+                          loading="lazy"
+                        />
+                      </div>
+                      <span className="uppercase font-semibold">
+                        {currency.code}
+                      </span>
                     </button>
                   </div>
-                  
+
                   <div className="mt-auto pt-6 border-t border-gray-100 dark:border-slate-800 flex flex-col gap-2">
-                    <a href="#" className="flex items-center gap-3 text-lg font-bold text-[#1A2B48] hover:bg-gray-50 dark:hover:bg-slate-900 dark:text-slate-100 py-3 px-4 rounded-xl transition-colors">
+                    <a
+                      href="#"
+                      className="flex items-center gap-3 text-lg font-bold text-[#1A2B48] hover:bg-gray-50 dark:hover:bg-slate-900 dark:text-slate-100 py-3 px-4 rounded-xl transition-colors"
+                    >
                       Support
                     </a>
                   </div>
@@ -385,9 +811,9 @@ export default function Header({
         </AnimatePresence>
       </header>
 
-      <SettingsModal 
-        isOpen={settingsModalOpen} 
-        onClose={() => setSettingsModalOpen(false)} 
+      <SettingsModal
+        isOpen={settingsModalOpen}
+        onClose={() => setSettingsModalOpen(false)}
       />
     </>
   );

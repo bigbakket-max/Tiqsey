@@ -4,7 +4,8 @@ import {
   X, Star, Calendar, Users, ChevronDown, ChevronUp, CheckCircle2, AlertCircle, 
   MapPin, Clock, Languages, ShieldAlert, Check, Flame, CreditCard, Sparkles, Ticket,
   Phone, ArrowLeft, Image, Smartphone, Zap, BookOpen, Compass, Info, RotateCcw, Map,
-  MessageSquare, Plus, ChevronLeft, ChevronRight, Heart
+  MessageSquare, Plus, ChevronLeft, ChevronRight, Heart, Share2, Copy, Mail, ExternalLink,
+  Tag
 } from 'lucide-react';
 import { useSettings } from '../contexts/SettingsContext';
 import { useAuth } from '../contexts/AuthContext';
@@ -42,16 +43,40 @@ export default function AttractionDetailModal({ attractionId, onClose, onNavigat
     // Clean up the attraction name if it ends with ":" or has "Ticket" already
     const cleanName = attraction.name.includes(':') 
       ? attraction.name.split(':')[0] 
-      : attraction.name.replace(/Entrance Ticket|Ticket/g, '').trim();
+      : attraction.name.replace(/Entrance Tickets|Entrance Ticket|Tickets|Ticket/gi, '').trim();
+
+    const basePrice = attraction.discountPrice || attraction.price;
 
     return [
       { 
         id: 'general', 
+        listName: "1-Day Admission Ticket",
         name: `${cleanName} – Same Day Entry Ticket (Instant Confirmation & Guaranteed Admission)`, 
         shortName: `${cleanName} Entry Ticket`,
         priceOffset: 0,
+        couponDiscount: 3.80,
         description: `Admission to ${cleanName} permanent collection. Timed entry slots guarantee immediate access without waiting.`,
         duration: '2 Hours'
+      },
+      { 
+        id: 'non-stop-2day', 
+        listName: "Non-stop 2-Day Admission Ticket",
+        name: `${cleanName} – Non-stop 2-Day Admission Ticket (Fast Track Entry)`, 
+        shortName: `${cleanName} 2-Day Fast Track`,
+        priceOffset: Math.round(basePrice * 0.15),
+        couponDiscount: 4.36,
+        description: `Experience two days of unrestricted exploration with fast-track admission past standard queues.`,
+        duration: 'Flexible 48 Hours'
+      },
+      { 
+        id: '2day-7days', 
+        listName: "2-Day Admission Ticket (2 Visits within 7 Days)",
+        name: `${cleanName} – 2-Day Admission Ticket (2 Visits within 7 Days)`, 
+        shortName: `${cleanName} 2-Visit Pass`,
+        priceOffset: Math.round(basePrice * 0.45),
+        couponDiscount: 5.52,
+        description: `Visit twice at any time within a 7-day period. Perfect for paced discovery of temporary galleries.`,
+        duration: '7 Days Validity'
       }
     ];
   }, [attraction]);
@@ -148,6 +173,38 @@ export default function AttractionDetailModal({ attractionId, onClose, onNavigat
   const [bookingSuccess, setBookingSuccess] = useState<any>(null);
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
 
+  // Share Activity Link States & Helpers
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [isCopied, setIsCopied] = useState(false);
+
+  const shareUrl = useMemo(() => {
+    if (!attraction) return '';
+    return `${window.location.origin}${window.location.pathname}?attraction=${attraction.id}`;
+  }, [attraction?.id]);
+
+  const handleShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: attraction?.name || 'Check out this amazing activity!',
+          text: attraction?.description || 'Found this wonderful activity on Secure Bookings.',
+          url: shareUrl,
+        });
+      } catch (err) {
+        // Fallback to our custom dialog if user cancelled or it failed
+        setIsShareModalOpen(true);
+      }
+    } else {
+      setIsShareModalOpen(true);
+    }
+  };
+
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(shareUrl);
+    setIsCopied(true);
+    setTimeout(() => setIsCopied(false), 2000);
+  };
+
   // Accordion Expandable States
   const [isDescriptionOpen, setIsDescriptionOpen] = useState(true);
   const [isInstructionsOpen, setIsInstructionsOpen] = useState(false);
@@ -195,16 +252,28 @@ export default function AttractionDetailModal({ attractionId, onClose, onNavigat
 
   // Find 4 other attractions in the destination "Customers also bought"
   const customersAlsoBought = useMemo(() => {
-    const list = POPULAR_ATTRACTIONS.filter(
-      a => a.id !== attraction.id && (a.city === attraction.city || a.isPopular)
+    // 1. Get other attractions in the exact same city
+    const sameCity = POPULAR_ATTRACTIONS.filter(
+      a => a.id !== attraction.id && a.city === attraction.city
     );
-    // If not enough items in filtered list, fill with remaining popular ones
+    
+    // 2. If we don't have enough (we need 4), get attractions from the same region
+    let list = [...sameCity];
     if (list.length < 4) {
-      const remaining = POPULAR_ATTRACTIONS.filter(
+      const sameRegion = POPULAR_ATTRACTIONS.filter(
+        a => a.id !== attraction.id && a.region === attraction.region && !list.some(item => item.id === a.id)
+      );
+      list.push(...sameRegion);
+    }
+    
+    // 3. If we still don't have 4, get other popular attractions
+    if (list.length < 4) {
+      const otherPopular = POPULAR_ATTRACTIONS.filter(
         a => a.id !== attraction.id && !list.some(item => item.id === a.id)
       );
-      list.push(...remaining);
+      list.push(...otherPopular);
     }
+    
     return list.slice(0, 4);
   }, [attraction]);
 
@@ -434,6 +503,20 @@ export default function AttractionDetailModal({ attractionId, onClose, onNavigat
               </div>
             )}
 
+            {/* Floating Share Button */}
+            {attraction && (
+              <motion.button
+                whileTap={{ scale: 0.85 }}
+                whileHover={{ scale: 1.05 }}
+                onClick={handleShare}
+                className="absolute top-4 right-[4.25rem] z-20 flex items-center justify-center w-11 h-11 rounded-full bg-white/95 dark:bg-slate-900/95 shadow-lg border border-slate-100/60 dark:border-slate-800/60 backdrop-blur-xs transition-colors cursor-pointer group/share"
+                title="Share Activity"
+                aria-label="Share Activity"
+              >
+                <Share2 className="w-5 h-5 text-slate-600 dark:text-slate-400 group-hover/share:text-brand transition-colors" />
+              </motion.button>
+            )}
+
             {/* Wishlist/Favorite Floating Button */}
             {attraction && (
               <motion.button
@@ -499,7 +582,7 @@ export default function AttractionDetailModal({ attractionId, onClose, onNavigat
               </div>
               
               {/* Star rating pill box stacked for high visual balance */}
-              <div className="flex flex-col items-start md:items-end gap-1.5 shrink-0 bg-slate-50/50 dark:bg-slate-900/30 p-2 sm:p-3 rounded-2xl border border-gray-150 dark:border-slate-850 md:border-none md:bg-transparent md:p-0">
+              <div className="flex flex-col items-start md:items-end gap-2.5 shrink-0 bg-slate-50/50 dark:bg-slate-900/30 p-2 sm:p-3 rounded-2xl border border-gray-150 dark:border-slate-850 md:border-none md:bg-transparent md:p-0">
                 <div className="flex items-center gap-2">
                   <div className="flex items-center gap-1.5 bg-amber-500/10 dark:bg-amber-500/20 px-3.5 py-1.5 rounded-2xl border border-amber-200/60 dark:border-amber-900/30 shadow-xs select-none">
                     <Star className="w-4 h-4 fill-amber-500 text-amber-500 shrink-0" />
@@ -508,51 +591,15 @@ export default function AttractionDetailModal({ attractionId, onClose, onNavigat
                     </span>
                   </div>
                 </div>
+                <button
+                  onClick={handleShare}
+                  className="flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-black uppercase tracking-wider text-slate-700 dark:text-slate-300 hover:text-brand dark:hover:text-brand bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-brand/40 dark:hover:border-brand/40 rounded-xl transition-all cursor-pointer shadow-3xs active:scale-95"
+                >
+                  <Share2 className="w-3.5 h-3.5" />
+                  Share Link
+                </button>
               </div>
             </div>
-
-                {/* Banner & Badges Single Row Grid Container */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-stretch">
-                  {/* Grab Your Last-Minute Tickets callout banner */}
-                  <div id="last-minute-alert-banner" className="bg-gradient-to-r from-[#e3000f]/5 to-[#e3000f]/0 dark:from-[#e3000f]/10 dark:to-transparent border border-brand/15 dark:border-brand/25 rounded-2xl p-4.5 flex items-start gap-3.5 shadow-2xs">
-                    <div className="p-2.5 bg-[#e3000f]/10 text-[#e3000f] rounded-xl shrink-0 mt-0.5 shadow-2xs">
-                      <Zap className="w-4 h-4 fill-[#e3000f]" />
-                    </div>
-                    <div>
-                      <h4 className="text-xs font-black uppercase text-[#e3000f] tracking-wider mb-1">
-                        Grab Your Last-Minute Tickets:
-                      </h4>
-                      <p className="text-xs font-semibold text-slate-750 dark:text-slate-300 leading-relaxed">
-                        Last-minute guaranteed tickets are available for this popular attraction. Confirm your entry instantly while limited spots remain.
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Mobile Voucher & Instant Confirmation badges */}
-                  <div id="quick-attributes-row" className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-4.5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800/80 shadow-2xs select-none">
-                    <div className="flex items-center gap-3.5 flex-1">
-                      <div className="w-11 h-11 rounded-xl bg-blend-normal bg-brand/10 text-brand flex items-center justify-center border border-brand/15 shrink-0 shadow-2xs">
-                        <Smartphone className="w-5 h-5 animate-pulse" />
-                      </div>
-                      <div>
-                        <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 dark:text-slate-500 block mb-0.5">Ticket Format</span>
-                        <span className="text-xs font-black text-slate-800 dark:text-slate-200">Mobile Voucher</span>
-                      </div>
-                    </div>
-
-                    <div className="hidden sm:block w-[1px] h-10 bg-gray-150 dark:bg-slate-800 self-center" />
-
-                    <div className="flex items-center gap-3.5 flex-1 sm:pl-4">
-                      <div className="w-11 h-11 rounded-xl bg-emerald-500/10 text-emerald-650 dark:text-emerald-400 flex items-center justify-center border border-emerald-500/15 shrink-0 shadow-2xs">
-                        <Check className="w-5 h-5 stroke-[2.5]" />
-                      </div>
-                      <div>
-                        <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 dark:text-slate-500 block mb-0.5">Access Speed</span>
-                        <span className="text-xs font-black text-slate-800 dark:text-slate-200">Instant confirmation</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
 
                 {/* Highlights Panel */}
                 <div id="highlights-section" className="space-y-4 pt-2">
@@ -572,140 +619,170 @@ export default function AttractionDetailModal({ attractionId, onClose, onNavigat
                   </div>
                 </div>
 
-                {/* Select Package Options Panel */}
+                {/* Select Package Options Panel styled according to uploaded mockup layout */}
                 <div id="select-package-options-section" className="space-y-4 pt-1">
-                  {/* Left-bordered section heading matching the screenshot and brand identity */}
-                  <div className="flex items-center gap-2.5 border-l-4 border-brand pl-3 select-none">
-                    <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-white tracking-wider leading-none uppercase">
-                      Select Package Options
-                    </h3>
-                  </div>
+                  <div className="bg-[#f4f7f9] dark:bg-slate-900/60 p-4 sm:p-5 md:p-6 rounded-[24px] border border-[#e2e8f0] dark:border-slate-800/65 space-y-4">
+                    <div className="flex items-center gap-2.5 select-none">
+                      <div className="w-[5px] h-[20px] sm:h-[22px] bg-[#f95e00] rounded-[2px] shrink-0" />
+                      <h2 className="text-[19px] sm:text-[21px] font-bold text-[#111e38] dark:text-white tracking-tight leading-none">
+                        Select Package Options
+                      </h2>
+                    </div>
 
-                  <div className="space-y-4">
-                    {dynamicPackages.map((pkg, index) => {
-                      const isSelected = selectedPackageId === pkg.id;
-                      const isExpanded = expandedPackageId === pkg.id;
-                      
-                      // Calculate mockup crossed out text for authentic pricing discount feeling
-                      const basePriceVal = attraction.discountPrice || attraction.price;
-                      const originalPriceRaw = (basePriceVal + pkg.priceOffset) * 1.75;
-                      const cleanName = attraction.name.includes(':') 
-                        ? attraction.name.split(':')[0] 
-                        : attraction.name.replace(/Entrance Ticket|Ticket/g, '').trim();
-
-                      return (
-                        <div
-                          key={pkg.id}
-                          id={index === 0 ? "package-card-first" : `package-card-${pkg.id}`}
-                          tabIndex={0}
-                          className={`bg-white dark:bg-slate-900 rounded-3xl border-2 transition-all duration-200 select-none outline-none focus-visible:ring-2 focus-visible:ring-brand scroll-mt-24 ${
-                            isSelected
-                              ? 'border-brand shadow-md dark:shadow-brand/5'
-                              : 'border-slate-150 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 hover:shadow-2xs'
-                          }`}
-                        >
-                          {/* Main Row clickable to select */}
-                          <div 
+                    <div className="space-y-3">
+                      {dynamicPackages.map((pkg, index) => {
+                        const isSelected = selectedPackageId === pkg.id;
+                        
+                        return (
+                          <div
+                            key={pkg.id}
+                            id={index === 0 ? "package-card-first" : `package-card-${pkg.id}`}
                             onClick={() => {
                               setSelectedPackageId(pkg.id);
-                              // Auto-expand on select for extremely responsive feedback
                               setExpandedPackageId(pkg.id);
                             }}
-                            className="p-5 sm:p-6 flex items-start justify-between gap-4 cursor-pointer"
+                            className={`relative bg-white dark:bg-slate-900 rounded-xl transition-all duration-300 select-none outline-none scroll-mt-24 cursor-pointer ${
+                              isSelected
+                                ? 'border-2 border-[#e3000f] p-4 sm:p-5 shadow-sm'
+                                : 'border border-[#dce6f0] dark:border-slate-800 p-4 sm:p-5 hover:border-[#c5d6e6] dark:hover:border-slate-700 hover:shadow-xs'
+                            }`}
                           >
-                            <div className="flex items-start gap-3.5">
-                              {/* Custom radio indicator matching the mockup */}
-                              <div className="pt-0.5">
-                                <div 
-                                  className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-all duration-200 ${
-                                    isSelected 
-                                      ? 'border-brand bg-brand/5' 
-                                      : 'border-slate-300 dark:border-slate-650'
-                                  }`}
-                                >
-                                  {isSelected && (
-                                    <div className="w-2.5 h-2.5 rounded-full bg-brand scale-100 transition-transform" />
-                                  )}
-                                </div>
-                              </div>
-                              
-                              <div>
-                                <h4 className="text-sm sm:text-base font-black text-slate-900 dark:text-white leading-snug tracking-tight">
-                                  {pkg.name}
-                                </h4>
-                                
-                                {/* 2 Hours duration pill and info line */}
-                                <div className="flex items-center gap-1.5 mt-2.5 text-slate-405 dark:text-slate-500 text-xs font-bold font-mono">
-                                  <Clock className="w-3.5 h-3.5 text-slate-400" />
-                                  <span>{pkg.duration}</span>
-                                </div>
-                                
-                                {/* Show/Hide Details trigger button */}
-                                <button
-                                  type="button"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    setExpandedPackageId(isExpanded ? null : pkg.id);
-                                  }}
-                                  className="text-xs font-black text-[#e3000f] hover:text-[#be000b] uppercase tracking-wider block mt-4 text-left cursor-pointer transition-colors"
-                                >
-                                  {isExpanded ? 'Hide Details' : 'Show Details'}
-                                </button>
-                              </div>
-                            </div>
-                            
-                            {/* Book Now Button on the right */}
-                            <div className="shrink-0 pt-1">
-                                <a
-                                  href={
-                                    attraction?.id === 'ams-rijksmuseum'
-                                      ? 'https://www.getyourguide.com/amsterdam-l36/amsterdam-rijksmuseum-entry-ticket-t7135/?partner_id=N778SV2&currency=EUR&travel_agent=1&cmp=share_to_earn'
-                                      : attraction?.id === 'ams-van-gogh'
-                                      ? 'https://www.tiqets.com/amsterdam-attractions-c75061/tickets-for-van-gogh-museum-p974079/?partner=bigbakket'
-                                      : attraction?.id === 'lis-jeronimos'
-                                      ? 'https://www.tiqets.com/lisbon-attractions-c76528/tickets-for-jeronimos-monastery-entry-p1012358/?partner=bigbakket'
-                                      : `https://www.tiqets.com/en/${attraction ? attraction.city.toLowerCase() : 'amsterdam'}-attractions-c75061/?partner=bigbakket&q=${encodeURIComponent(attraction ? attraction.name : '')}`
-                                  }
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  onClick={(e) => e.stopPropagation()}
-                                  className={`inline-flex px-4 py-2 sm:px-5 sm:py-2.5 rounded-full text-[11px] sm:text-xs font-bold uppercase tracking-wider transition-colors items-center justify-center min-w-[100px] ${
-                                    isSelected 
-                                      ? 'bg-[#e3000f] hover:bg-[#be000b] text-white shadow-md' 
-                                      : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
-                                  }`}
-                                >
-                                  Book Now
-                                </a>
-                            </div>
-                          </div>
 
-                          {/* Expanded detail drop matching mockup styling */}
-                          <AnimatePresence initial={false}>
-                            {isExpanded && (
-                              <motion.div
-                                initial={{ height: 0, opacity: 0 }}
-                                animate={{ height: 'auto', opacity: 1 }}
-                                exit={{ height: 0, opacity: 0 }}
-                                transition={{ duration: 0.15 }}
-                                className="overflow-hidden border-t border-slate-100 dark:border-slate-800/80"
-                              >
-                                <div className="px-5 sm:px-6 pb-6 pt-5 space-y-3 text-slate-500 dark:text-slate-400">
-                                  
-                                  <div className="space-y-1.5">
-                                    <p className="text-xs text-rose-600 dark:text-rose-400 font-extrabold flex items-center gap-1.5">
-                                      <Info className="w-3.5 h-3.5" />
-                                      Tickets are Non-Refundable
-                                    </p>
+                            {isSelected ? (
+                              /* ================== EXPANDED STATE (Screenshot 2) ================== */
+                              <div>
+                                {index === 0 && (
+                                  <div className="mb-2">
+                                    <span className="inline-flex items-center gap-1 text-[10px] font-black bg-[#00875a] text-white px-2 py-0.5 rounded-[4px] uppercase tracking-wide">
+                                      ★ MOST BOOKED
+                                    </span>
+                                  </div>
+                                )}
+                                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                                  <div className="flex items-start gap-3">
+                                    {/* Red dot custom radio button */}
+                                    <div className="w-[18px] h-[18px] rounded-full bg-white border-2 border-[#e3000f] flex items-center justify-center shrink-0 mt-0.5">
+                                      <div className="w-2.5 h-2.5 rounded-full bg-[#e3000f]" />
+                                    </div>
+                                    
+                                    <div>
+                                      <h4 className="text-[15px] sm:text-base font-bold text-[#111e38] dark:text-white leading-snug pr-2">
+                                        {pkg.name}
+                                      </h4>
+                                      
+                                      {/* Clock icon with duration */}
+                                      <div className="flex items-center gap-1.5 mt-2 text-[#111e38] dark:text-slate-200 text-[13px] font-medium">
+                                        <Clock className="w-4 h-4 text-slate-500 shrink-0" />
+                                        <span>{pkg.duration}</span>
+                                      </div>
+                                      
+                                      {/* HIDE DETAILS text link */}
+                                      <button
+                                        type="button"
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          setExpandedPackageId(null);
+                                          setSelectedPackageId('');
+                                        }}
+                                        className="text-[11px] font-bold text-[#e3000f] hover:text-[#be000b] uppercase tracking-wider block mt-4 text-left cursor-pointer transition-colors"
+                                      >
+                                        HIDE DETAILS
+                                      </button>
+                                    </div>
                                   </div>
 
+                                  {/* Solid Red BOOK NOW CTA */}
+                                  <div className="shrink-0 self-stretch md:self-center flex items-center justify-end">
+                                    <a
+                                      href={
+                                        attraction?.id === 'ams-rijksmuseum'
+                                          ? 'https://www.getyourguide.com/amsterdam-l36/amsterdam-rijksmuseum-entry-ticket-t7135/?partner_id=N778SV2&currency=EUR&travel_agent=1&cmp=share_to_earn'
+                                          : attraction?.id === 'ams-van-gogh'
+                                          ? 'https://www.tiqets.com/amsterdam-attractions-c75061/tickets-for-van-gogh-museum-p974079/?partner=bigbakket'
+                                          : attraction?.id === 'lis-jeronimos'
+                                          ? 'https://www.tiqets.com/lisbon-attractions-c76528/tickets-for-jeronimos-monastery-entry-p1012358/?partner=bigbakket'
+                                          : `https://www.tiqets.com/en/${attraction ? attraction.city.toLowerCase() : 'amsterdam'}-attractions-c75061/?partner=bigbakket&q=${encodeURIComponent(attraction ? attraction.name : '')}`
+                                      }
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      onClick={(e) => e.stopPropagation()}
+                                      className="w-full md:w-auto inline-flex px-6 py-2.5 bg-[#e3000f] hover:bg-[#be000b] text-white rounded-[8px] text-[13px] font-bold uppercase transition-all items-center justify-center shadow-sm hover:shadow active:scale-95"
+                                    >
+                                      BOOK NOW
+                                    </a>
+                                  </div>
                                 </div>
-                              </motion.div>
+
+                                {/* Footer block: Tickets are Non-Refundable */}
+                                <div className="mt-5 pt-3.5 border-t border-[#f4f7f9] dark:border-slate-800/80 flex items-center gap-1.5 text-[13px] text-[#e3000f] select-none">
+                                  <Info className="w-4 h-4 shrink-0" />
+                                  <span>Tickets are Non-Refundable</span>
+                                </div>
+                              </div>
+                            ) : (
+                              /* ================== COLLAPSED STATE (Screenshot 1) ================== */
+                              <div className="flex items-stretch justify-between gap-4">
+                                <div className="flex-1 flex flex-col">
+                                  {index === 0 && (
+                                    <div className="mb-2">
+                                      <span className="inline-flex items-center gap-1 text-[10px] font-black bg-[#00875a] text-white px-2 py-0.5 rounded-[4px] uppercase tracking-wide">
+                                        ★ MOST BOOKED
+                                      </span>
+                                    </div>
+                                  )}
+                                  <div>
+                                    <h4 className="text-[15px] sm:text-base font-bold text-[#111e38] dark:text-white leading-snug">
+                                      {pkg.name}
+                                    </h4>
+                                  </div>
+
+                                  {/* Pricing left side */}
+                                  {(() => {
+                                    const basePriceVal = attraction.discountPrice || attraction.price;
+                                    const currentPriceRaw = basePriceVal + pkg.priceOffset;
+                                    const originalPriceRaw = Math.round(currentPriceRaw / 0.85) - 0.10;
+                                    return (
+                                      <div className="mt-3 flex flex-col items-start leading-none">
+                                        <span className="line-through decoration-[#94a3b8] text-[#94a3b8] font-medium text-[13px]">
+                                          {currency.code} {(originalPriceRaw * currency.rate).toFixed(2)}
+                                        </span>
+                                        <div className="flex items-baseline text-[#c22015] mt-1">
+                                          <span className="text-xs font-bold mr-1">{currency.code}</span>
+                                          <span className="text-[22px] font-extrabold tracking-tight">
+                                            {(currentPriceRaw * currency.rate).toFixed(2)}
+                                          </span>
+                                        </div>
+                                      </div>
+                                    );
+                                  })()}
+                                </div>
+
+                                <div className="flex flex-col justify-end items-end shrink-0 pl-2">
+                                  {/* Book Now pill button */}
+                                  <a 
+                                    href={
+                                      attraction?.id === 'ams-rijksmuseum'
+                                        ? 'https://www.getyourguide.com/amsterdam-l36/amsterdam-rijksmuseum-entry-ticket-t7135/?partner_id=N778SV2&currency=EUR&travel_agent=1&cmp=share_to_earn'
+                                        : attraction?.id === 'ams-van-gogh'
+                                        ? 'https://www.tiqets.com/amsterdam-attractions-c75061/tickets-for-van-gogh-museum-p974079/?partner=bigbakket'
+                                        : attraction?.id === 'lis-jeronimos'
+                                        ? 'https://www.tiqets.com/lisbon-attractions-c76528/tickets-for-jeronimos-monastery-entry-p1012358/?partner=bigbakket'
+                                        : `https://www.tiqets.com/en/${attraction ? attraction.city.toLowerCase() : 'amsterdam'}-attractions-c75061/?partner=bigbakket&q=${encodeURIComponent(attraction ? attraction.name : '')}`
+                                    }
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    onClick={(e) => e.stopPropagation()}
+                                    className="px-6 py-2 bg-[#e3000f] hover:bg-[#be000b] text-white rounded-[8px] text-[13px] font-bold uppercase transition-all shadow-sm hover:shadow active:scale-95 cursor-pointer flex items-center justify-center whitespace-nowrap"
+                                  >
+                                    Book Now
+                                  </a>
+                                </div>
+                              </div>
                             )}
-                          </AnimatePresence>
-                        </div>
-                      );
-                    })}
+                          </div>
+                        );
+                      })}
+                    </div>
                   </div>
                 </div>
 
@@ -759,10 +836,9 @@ export default function AttractionDetailModal({ attractionId, onClose, onNavigat
                       id="finalize-booking-cta-btn"
                       type="button"
                       onClick={handleScrollToPackages}
-                      className="w-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-755 text-slate-855 dark:text-slate-200 font-bold text-xs uppercase tracking-widest rounded-full py-3.5 transition-all cursor-pointer flex items-center justify-center gap-2 border border-slate-200 dark:border-slate-700 active:scale-98"
+                      className="w-full bg-brand hover:bg-[#be000b] text-white text-[16px] sm:text-[17px] font-bold rounded-[6px] py-3.5 sm:py-4 border border-brand transition-all flex items-center justify-center gap-2.5 active:scale-98 cursor-pointer"
                     >
-                      <Calendar className="w-4 h-4 text-[#e3000f]" />
-                      <span>Check availability</span>
+                      <span>Book Now</span>
                     </button>
                   </div>
 
@@ -1239,6 +1315,186 @@ export default function AttractionDetailModal({ attractionId, onClose, onNavigat
         )}
       </div>
 
+      {/* Custom Share Modal Dialog */}
+      <AnimatePresence>
+        {isShareModalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsShareModalOpen(false)}
+              className="absolute inset-0 bg-slate-900/60 backdrop-blur-xs"
+            />
+
+            {/* Modal Box */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              transition={{ type: 'spring', damping: 25, stiffness: 350 }}
+              className="relative w-full max-w-md bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-150 dark:border-slate-800 overflow-hidden z-10 p-6 flex flex-col gap-5 select-none"
+            >
+              {/* Header */}
+              <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+                <div className="flex items-center gap-2">
+                  <Share2 className="w-5 h-5 text-brand" />
+                  <h3 className="text-sm font-black text-slate-900 dark:text-white uppercase tracking-wider">
+                    Share Activity
+                  </h3>
+                </div>
+                <button
+                  onClick={() => setIsShareModalOpen(false)}
+                  className="p-1.5 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 cursor-pointer"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              {/* Activity Mini-Preview */}
+              <div className="flex gap-3 bg-slate-50 dark:bg-slate-950 p-3 rounded-xl border border-slate-100 dark:border-slate-800/60">
+                <img
+                  src={mainImage}
+                  alt={attraction.name}
+                  className="w-16 h-16 object-cover rounded-lg border border-slate-200/50 dark:border-slate-800/80 shrink-0"
+                  referrerPolicy="no-referrer"
+                />
+                <div className="flex flex-col justify-center min-w-0">
+                  <h4 className="text-xs font-black text-slate-900 dark:text-white truncate">
+                    {attraction.name}
+                  </h4>
+                  <p className="text-[10px] font-bold text-slate-400 mt-0.5 flex items-center gap-1">
+                    <MapPin className="w-3 h-3 text-brand" />
+                    {attraction.city}
+                  </p>
+                  <div className="flex items-center gap-1 mt-1">
+                    <Star className="w-3 h-3 fill-amber-500 text-amber-500" />
+                    <span className="text-[10px] font-black text-amber-700 dark:text-amber-400">
+                      {attraction.rating} / 5
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Copy URL Input */}
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                  Activity Link URL
+                </label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    readOnly
+                    value={shareUrl}
+                    className="flex-1 min-w-0 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-850 rounded-xl px-3 py-2 text-xs font-semibold text-slate-700 dark:text-slate-300 focus:outline-hidden"
+                  />
+                  <button
+                    onClick={handleCopyLink}
+                    className={`px-4 rounded-xl text-xs font-black uppercase tracking-wider flex items-center gap-1.5 cursor-pointer transition-all ${
+                      isCopied
+                        ? 'bg-emerald-500 text-white'
+                        : 'bg-brand text-white hover:bg-[#be000b] active:scale-95'
+                    }`}
+                  >
+                    {isCopied ? (
+                      <>
+                        <Check className="w-3.5 h-3.5" />
+                        Copied
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="w-3.5 h-3.5" />
+                        Copy
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {/* Quick Share Platforms */}
+              <div className="space-y-2">
+                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block">
+                  Quick Share
+                </span>
+                <div className="grid grid-cols-4 gap-2">
+                  {/* Email */}
+                  <a
+                    href={`mailto:?subject=${encodeURIComponent(
+                      `Check out ${attraction.name}`
+                    )}&body=${encodeURIComponent(
+                      `I found this amazing activity on Secure Bookings:\n\n${attraction.name}\n${attraction.description}\n\nView here: ${shareUrl}`
+                    )}`}
+                    className="flex flex-col items-center gap-1.5 p-2 rounded-xl bg-slate-50 dark:bg-slate-950 hover:bg-slate-100 dark:hover:bg-slate-850/80 border border-slate-200/40 dark:border-slate-800/40 text-slate-600 dark:text-slate-400 hover:text-brand dark:hover:text-brand transition-colors text-center"
+                  >
+                    <Mail className="w-4 h-4" />
+                    <span className="text-[9px] font-extrabold uppercase tracking-wide">
+                      Email
+                    </span>
+                  </a>
+
+                  {/* Twitter/X */}
+                  <a
+                    href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
+                      `Planning my next adventure: ${attraction.name}! Check it out:`
+                    )}&url=${encodeURIComponent(shareUrl)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex flex-col items-center gap-1.5 p-2 rounded-xl bg-slate-50 dark:bg-slate-950 hover:bg-slate-100 dark:hover:bg-slate-850/80 border border-slate-200/40 dark:border-slate-800/40 text-slate-600 dark:text-slate-400 hover:text-brand dark:hover:text-brand transition-colors text-center"
+                  >
+                    <ExternalLink className="w-4 h-4" />
+                    <span className="text-[9px] font-extrabold uppercase tracking-wide">
+                      Twitter
+                    </span>
+                  </a>
+
+                  {/* WhatsApp */}
+                  <a
+                    href={`https://api.whatsapp.com/send?text=${encodeURIComponent(
+                      `Check out this amazing activity on Secure Bookings: ${attraction.name} - ${shareUrl}`
+                    )}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex flex-col items-center gap-1.5 p-2 rounded-xl bg-slate-50 dark:bg-slate-950 hover:bg-slate-100 dark:hover:bg-slate-850/80 border border-slate-200/40 dark:border-slate-800/40 text-slate-600 dark:text-slate-400 hover:text-brand dark:hover:text-brand transition-colors text-center"
+                  >
+                    <MessageSquare className="w-4 h-4" />
+                    <span className="text-[9px] font-extrabold uppercase tracking-wide">
+                      WhatsApp
+                    </span>
+                  </a>
+
+                  {/* Facebook */}
+                  <a
+                    href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex flex-col items-center gap-1.5 p-2 rounded-xl bg-slate-50 dark:bg-slate-950 hover:bg-slate-100 dark:hover:bg-slate-850/80 border border-slate-200/40 dark:border-slate-800/40 text-slate-600 dark:text-slate-400 hover:text-brand dark:hover:text-brand transition-colors text-center"
+                  >
+                    <Compass className="w-4 h-4" />
+                    <span className="text-[9px] font-extrabold uppercase tracking-wide">
+                      Facebook
+                    </span>
+                  </a>
+                </div>
+              </div>
+
+              {/* Secure QR Code Pass */}
+              <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex flex-col items-center gap-2">
+                <div className="w-24 h-24 bg-white p-2 rounded-xl border border-slate-150 shadow-xs flex items-center justify-center">
+                  <img
+                    src="https://upload.wikimedia.org/wikipedia/commons/d/d0/QR_code_for_all_about_QR_codes_on_English_Wikipedia.svg"
+                    alt="Scan to share activity link"
+                    className="w-full h-full object-contain"
+                  />
+                </div>
+                <span className="text-[8px] font-mono font-bold text-slate-400 uppercase tracking-widest text-center">
+                  Scan QR code to open on mobile
+                </span>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
